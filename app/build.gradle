@@ -1,0 +1,79 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    defaultConfig {
+        applicationId "com.yechy.dailypic"
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.compileSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //kotlin
+    implementation rootProject.ext.dependencies['kotlin-stdlib']
+
+    //kodein
+    api rootProject.ext.dependencies['kodein-di-generic-jvm']
+    api rootProject.ext.dependencies['kodein-di-framework-android-core']
+    api rootProject.ext.dependencies['kodein-di-framework-android-x']
+
+    //jetpack
+    api rootProject.ext.dependencies['lifecycle-extensions']
+    api rootProject.ext.dependencies['lifecycle-common-java8']
+    kapt rootProject.ext.dependencies['lifecycle-compiler']
+
+    //db
+    api rootProject.ext.dependencies['room-runtime']
+    api rootProject.ext.dependencies['room-rxjava2']
+    kapt rootProject.ext.dependencies['room-compiler']
+
+    api rootProject.ext.dependencies['lifecycle-viewmodel']
+
+    //ui
+    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
+    implementation rootProject.ext.dependencies['constraint']
+    implementation (rootProject.ext.dependencies['StatusBarCompat'], {
+        exclude group: 'androidx.appcompat:appcompat'
+        exclude group: 'com.google.android.material:material'
+    })
+    implementation rootProject.ext.dependencies['photoview']
+
+    //rx
+    implementation rootProject.ext.dependencies['autodispose-android']
+    implementation rootProject.ext.dependencies['autodispose-android-archcomponents']
+
+    //net
+    implementation rootProject.ext.dependencies['okhttp']
+    implementation rootProject.ext.dependencies['retrofit']
+    implementation rootProject.ext.dependencies['adapter-rxjava']
+    implementation rootProject.ext.dependencies['logging-interceptor']
+    implementation rootProject.ext.dependencies['glide']
+    kapt rootProject.ext.dependencies['glide-compiler']
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
