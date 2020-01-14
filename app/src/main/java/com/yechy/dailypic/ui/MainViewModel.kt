@@ -5,11 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.uber.autodispose.autoDispose
+import com.yechy.dailypic.ext.copyMap
 import com.yechy.dailypic.repository.DataRepos
+import com.yechy.dailypic.repository.PictureInfo
 import com.yechy.dailypic.util.SingletonHolderSingleArg
 import com.yechy.dailypic.vm.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import java.util.function.Consumer
 
 /**
  *
@@ -30,9 +33,30 @@ class MainViewModel(private val dataRepos: DataRepos): BaseViewModel() {
     }
 
     fun getTodayPicture() {
-        mViewStateSubject.onNext(MainViewState(isLoading = false, pictureInfo = null, throwable = null))
+        mViewStateSubject.copyMap {
+            it.copy(isLoading = true, pictureInfo = null, throwable = null)
+        }
         dataRepos.getTodayPicture()
             .autoDispose(this)
+            .subscribe (
+                { pictureInfo ->
+                    mViewStateSubject.copyMap {
+                        it.copy(
+                            isLoading = false,
+                            pictureInfo = pictureInfo,
+                            throwable = null
+                        )
+                    }
+                }, {t: Throwable? ->
+                    mViewStateSubject.copyMap {
+                        it.copy(
+                            isLoading = false,
+                            pictureInfo = null,
+                            throwable = t
+                        )
+                    }
+                }
+                )
     }
 
 }
