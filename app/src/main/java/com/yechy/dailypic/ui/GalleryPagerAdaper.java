@@ -29,6 +29,11 @@ public class GalleryPagerAdaper extends PagerAdapter {
         this.pictureInfoList = pictureInfoList;
     }
 
+    public void setData(List<PictureInfo> dataList) {
+        pictureInfoList.clear();
+        pictureInfoList.addAll(dataList);
+    }
+
     @Override
     public int getCount() {
         if (pictureInfoList != null) {

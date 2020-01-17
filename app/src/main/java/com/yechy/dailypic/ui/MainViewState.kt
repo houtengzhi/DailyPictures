@@ -9,11 +9,11 @@ import java.util.*
  */
 data class MainViewState(
     val isLoading: Boolean,
-    val pictureInfo: PictureInfo?,
+    val pictureList: List<PictureInfo>?,
     val throwable: Throwable?) {
     companion object {
         fun initial(): MainViewState {
-            return MainViewState(isLoading = false, pictureInfo = null, throwable = null)
+            return MainViewState(isLoading = false, pictureList = null, throwable = null)
         }
     }
 
@@ -23,13 +23,13 @@ data class MainViewState(
         other as MainViewState
 
         if (isLoading != other.isLoading) return false
-        if (pictureInfo != other.pictureInfo) return false
+        if (pictureList != other.pictureList) return false
         if (throwable != other.throwable) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return Objects.hash(isLoading, pictureInfo, throwable)
+        return Objects.hash(isLoading, pictureList, throwable)
     }
 }

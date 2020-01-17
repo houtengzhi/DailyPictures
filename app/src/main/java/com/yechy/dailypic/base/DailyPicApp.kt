@@ -18,9 +18,8 @@ import org.kodein.di.generic.singleton
  * Created by cloud on 2019-10-15.
  */
 open class DailyPicApp: Application(), KodeinAware {
-    override val kodein: Kodein = Kodein.lazy {
+    override val kodein by Kodein.lazy {
         bind<Context>() with singleton { this@DailyPicApp }
-        import(androidCoreModule(this@DailyPicApp))
         import(androidXModule(this@DailyPicApp))
         import(appModule)
         import(httpModule)

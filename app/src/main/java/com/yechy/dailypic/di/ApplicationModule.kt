@@ -15,6 +15,6 @@ private const val MODULE_NAME = "Application_Module"
 val appModule = Kodein.Module(MODULE_NAME, false) {
 
     bind<DataRepos>() with singleton {
-        DataRepos(dbRepos = instance(), androidRepos = instance(), httpRepos = instance())
+        DataRepos(dbRepos = instance(), httpRepos = instance())
     }
 }
