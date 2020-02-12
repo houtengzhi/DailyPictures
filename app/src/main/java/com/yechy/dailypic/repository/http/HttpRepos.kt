@@ -9,7 +9,8 @@ import io.reactivex.Flowable
  */
 class HttpRepos(val bingService: BingService) {
 
-    fun fetchDailyPictureInfo(): Flowable<PictureInfo> {
-        return bingService.fetchHPImage("js", 0, 1, "")
+    fun fetchDailyPictureInfo(): Flowable<List<PictureInfo>> {
+        return bingService.fetchHPImage("js", 0, 3, "")
+            .map { it.data }
     }
 }

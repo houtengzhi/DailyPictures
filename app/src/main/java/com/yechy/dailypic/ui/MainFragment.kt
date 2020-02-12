@@ -25,7 +25,6 @@ class MainFragment: BaseFragment() {
     }
 
     private val mViewModel: MainViewModel by instance()
-    private val mAdapter = GalleryPagerAdaper(context, ArrayList<PictureInfo>())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +38,7 @@ class MainFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewPager = view.findViewById<ViewPager>(R.id.viewpager)
-        viewPager.adapter = mAdapter
+        viewPager.adapter = GalleryPagerAdaper(context, ArrayList<PictureInfo>())
 
         mViewModel.observeViewState()
             .observeOn(AndroidSchedulers.mainThread())
@@ -50,11 +49,16 @@ class MainFragment: BaseFragment() {
                     state.throwable.printStackTrace()
                 }
                 if (state.pictureList != null) {
-                    mAdapter.setData(state.pictureList)
-                    mAdapter.notifyDataSetChanged()
+                    (viewPager.adapter as GalleryPagerAdaper).setData(state.pictureList)
+                    (viewPager.adapter as GalleryPagerAdaper).notifyDataSetChanged()
                 }
             }, {throwable ->
                 throwable.printStackTrace()
             })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mViewModel.getTodayPicture()
     }
 }

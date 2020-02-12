@@ -20,6 +20,7 @@ import org.kodein.di.generic.singleton
 open class DailyPicApp: Application(), KodeinAware {
     override val kodein by Kodein.lazy {
         bind<Context>() with singleton { this@DailyPicApp }
+        import(androidCoreModule(this@DailyPicApp))
         import(androidXModule(this@DailyPicApp))
         import(appModule)
         import(httpModule)

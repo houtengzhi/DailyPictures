@@ -11,7 +11,7 @@ import io.reactivex.Flowable
  */
 class DataRepos(private val dbRepos: DbRepos, private val httpRepos: HttpRepos) {
 
-    fun getTodayPicture(): Flowable<PictureInfo> {
+    fun getTodayPicture(): Flowable<List<PictureInfo>> {
         return httpRepos.fetchDailyPictureInfo()
     }
 }

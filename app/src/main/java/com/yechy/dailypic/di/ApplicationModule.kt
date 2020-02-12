@@ -1,6 +1,8 @@
 package com.yechy.dailypic.di
 
 import com.yechy.dailypic.repository.DataRepos
+import com.yechy.dailypic.repository.db.DbRepos
+import com.yechy.dailypic.repository.http.HttpRepos
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance

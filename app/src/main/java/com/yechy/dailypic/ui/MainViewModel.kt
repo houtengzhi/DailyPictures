@@ -10,6 +10,9 @@ import com.yechy.dailypic.repository.DataRepos
 import com.yechy.dailypic.util.SingletonHolderSingleArg
 import com.yechy.dailypic.vm.BaseViewModel
 import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 
 /**
@@ -35,13 +38,15 @@ class MainViewModel(private val dataRepos: DataRepos): BaseViewModel() {
             it.copy(isLoading = true, pictureList = null, throwable = null)
         }
         dataRepos.getTodayPicture()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .autoDispose(this)
             .subscribe (
-                { pictureInfo ->
+                { pictureInfoList ->
                     mViewStateSubject.copyMap {
                         it.copy(
                             isLoading = false,
-                            pictureList = arrayListOf(pictureInfo),
+                            pictureList = pictureInfoList,
                             throwable = null
                         )
                     }

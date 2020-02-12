@@ -15,6 +15,6 @@ interface BingService {
     fun fetchHPImage(@Query("format") format: String,
                      @Query("idx") idx: Int,
                      @Query("n") n:Int,
-                     @Query("mkt") mkt: String) : Flowable<PictureInfo>
+                     @Query("mkt") mkt: String) : Flowable<ApiResponse<List<PictureInfo>>>
 
 }
