@@ -7,6 +7,7 @@ package com.yechy.dailypic.repository
 data class PictureInfo (val url: String,
                      val title: String,
                      val desc: String,
+                        val copyRight: String,
                      val copyrightonly: String,
                      val date: String,
                      val startDate: String,

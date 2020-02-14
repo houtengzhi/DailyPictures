@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -52,10 +52,13 @@ public class GalleryPagerAdaper extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_gallery_item, container, false);
         PhotoView photoView = view.findViewById(R.id.pv_gallery_item_image);
+        TextView textView = view.findViewById(R.id.tv_gallery_item_copyright);
         if (pictureInfoList != null && pictureInfoList.size() > position) {
             PictureInfo pictureInfo = pictureInfoList.get(position);
             ImageLoader.load(mContext, photoView, pictureInfo.getUrl());
+            textView.setText(pictureInfo.getCopyRight());
         }
+
         container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         return view;

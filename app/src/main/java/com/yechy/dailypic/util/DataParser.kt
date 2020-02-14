@@ -39,7 +39,7 @@ object DataParser {
                     val realUrl = BING_BASE_URL + url
 
                     val pictureInfo = PictureInfo(
-                        realUrl, title, desc, copyRightOnly,
+                        realUrl, title, desc, copyRight, copyRightOnly,
                         date, startDate, endDate, 0, 0, hash
                     )
                     pictureInfoList.add(pictureInfo)
