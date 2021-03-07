@@ -4,27 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.uber.autodispose.autoDispose
 import com.yechy.dailypic.R
 import com.yechy.dailypic.base.BaseFragment
 import com.yechy.dailypic.repository.PictureInfo
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_main.*
-import org.kodein.di.Kodein
-import org.kodein.di.generic.instance
 
 /**
  *
  * Created by cloud on 2019-12-03.
  */
+@AndroidEntryPoint
 class MainFragment: BaseFragment() {
-    override val kodein: Kodein = Kodein.lazy {
-        extend(parentKodein)
-        import(mainModule)
-    }
 
-    private val mViewModel: MainViewModel by instance()
+    val mViewModel: MainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

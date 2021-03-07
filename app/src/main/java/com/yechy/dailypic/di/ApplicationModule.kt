@@ -1,22 +1,31 @@
 package com.yechy.dailypic.di
 
+import android.app.Application
+import com.yechy.dailypic.base.DailyPicApp
 import com.yechy.dailypic.repository.DataRepos
 import com.yechy.dailypic.repository.db.DbRepos
 import com.yechy.dailypic.repository.http.HttpRepos
-import org.kodein.di.Kodein
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.singleton
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 /**
  *
  * Created by cloud on 2019-08-25.
  */
-private const val MODULE_NAME = "Application_Module"
+@Module
+@InstallIn(SingletonComponent::class)
+object ApplicationModule {
 
-val appModule = Kodein.Module(MODULE_NAME, false) {
-
-    bind<DataRepos>() with singleton {
-        DataRepos(dbRepos = instance(), httpRepos = instance())
+    @Provides
+    @Singleton
+    fun provideDataRepos(dbRepos: DbRepos, httpRepos: HttpRepos): DataRepos {
+        return DataRepos(dbRepos, httpRepos)
     }
+
+    @Provides
+    @Singleton
+    fun provideDailyPicApplication(application: Application): DailyPicApp = application as DailyPicApp
 }

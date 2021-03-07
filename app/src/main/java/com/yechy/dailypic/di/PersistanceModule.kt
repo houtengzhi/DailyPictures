@@ -1,36 +1,34 @@
 package com.yechy.dailypic.di
 
+import android.app.Application
 import androidx.room.Room
 import com.yechy.dailypic.base.DailyPicApp
 import com.yechy.dailypic.repository.db.AppDatabase
 import com.yechy.dailypic.repository.db.DbRepos
-import org.kodein.di.Kodein
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.singleton
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 /**
  *
  * Created by cloud on 2019-08-25.
  */
-private const val DB_MODULE_TAG = "DBModule"
+@Module
+@InstallIn(SingletonComponent::class)
+object PersistanceModule {
 
-private const val SP_MODULE_TAG = "SPModule"
+    const val DATABASE_NAME = "dailypic_db"
 
-private const val DATABASE_NAME = "raven.db"
+    @Provides
+    @Singleton
+    fun provideAppDatabase(application: Application): AppDatabase =
+        Room.databaseBuilder(application, AppDatabase::class.java, DATABASE_NAME)
+            .fallbackToDestructiveMigration()
+            .build()
 
-val dbModule = Kodein.Module(DB_MODULE_TAG) {
-    bind<AppDatabase>() with singleton {
-        Room.databaseBuilder(DailyPicApp.INSTANCE, AppDatabase::class.java, DATABASE_NAME)
-                .fallbackToDestructiveMigration()
-                .build()
-    }
-
-    bind<DbRepos>() with singleton {
-        DbRepos(appDatabase = instance())
-    }
-}
-
-val spModule = Kodein.Module(SP_MODULE_TAG) {
-
+    @Provides
+    @Singleton
+    fun provideDbRepos(appDatabase: AppDatabase): DbRepos = DbRepos(appDatabase)
 }

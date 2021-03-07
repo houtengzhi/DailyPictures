@@ -1,6 +1,7 @@
 package com.yechy.dailypic.ui
 
 import androidx.fragment.app.Fragment
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -19,18 +20,12 @@ import io.reactivex.subjects.BehaviorSubject
  *
  * Created by cloud on 2019-12-03.
  */
-class MainViewModel(private val dataRepos: DataRepos): BaseViewModel() {
+class MainViewModel @ViewModelInject constructor(val dataRepos: DataRepos): BaseViewModel() {
     private val mViewStateSubject: BehaviorSubject<MainViewState> = BehaviorSubject.createDefault(
         MainViewState.initial())
 
     fun observeViewState(): Observable<MainViewState> {
         return mViewStateSubject.hide().distinctUntilChanged()
-    }
-
-    companion object {
-        fun instance(fragment: Fragment, dataRepos: DataRepos): MainViewModel =
-            ViewModelProviders.of(fragment, MainViewModelFactory.getInstance(dataRepos))
-                .get(MainViewModel::class.java)
     }
 
     fun getTodayPicture() {
@@ -62,11 +57,4 @@ class MainViewModel(private val dataRepos: DataRepos): BaseViewModel() {
                 )
     }
 
-}
-
-class MainViewModelFactory(private val dataRepos: DataRepos): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        MainViewModel(dataRepos) as T
-
-    companion object : SingletonHolderSingleArg<MainViewModelFactory, DataRepos>(::MainViewModelFactory)
 }
