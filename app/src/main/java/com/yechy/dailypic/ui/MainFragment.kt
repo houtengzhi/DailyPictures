@@ -36,7 +36,7 @@ class MainFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewPager = view.findViewById<ViewPager>(R.id.viewpager)
-        viewPager.adapter = GalleryPagerAdaper(context, ArrayList<PictureInfo>())
+        viewPager.adapter = GalleryPagerAdaper(requireContext(), mutableListOf())
 
         mViewModel.observeViewState()
             .observeOn(AndroidSchedulers.mainThread())
