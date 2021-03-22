@@ -5,31 +5,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.uber.autodispose.autoDispose
 import com.yechy.dailypic.R
 import com.yechy.dailypic.base.BaseFragment
-import com.yechy.dailypic.repository.PictureInfo
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.fragment_gallery.*
 
 /**
  *
  * Created by cloud on 2019-12-03.
  */
 @AndroidEntryPoint
-class MainFragment: BaseFragment() {
+class GalleryFragment: BaseFragment() {
 
-    val mViewModel: MainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
+    val mViewModel: GalleryViewModel by lazy { ViewModelProvider(this).get(GalleryViewModel::class.java) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_main, container, false)
+        val view = inflater.inflate(R.layout.fragment_gallery, container, false)
         return view
     }
 

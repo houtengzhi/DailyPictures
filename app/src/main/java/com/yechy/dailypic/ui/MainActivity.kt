@@ -20,7 +20,7 @@ class MainActivity: BaseActivity() {
 
     private fun initFragment() {
         supportFragmentManager.apply {
-            findFragmentByTag(TAG) ?: beginTransaction().add(R.id.fl_container, MainFragment(), TAG).commitAllowingStateLoss()
+            findFragmentByTag(TAG) ?: beginTransaction().add(R.id.fl_container, GalleryFragment(), TAG).commitAllowingStateLoss()
         }
     }
 

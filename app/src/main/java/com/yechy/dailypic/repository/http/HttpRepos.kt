@@ -12,7 +12,7 @@ const val FORMAT = "js"
 class HttpRepos(val bingService: BingService) {
 
     fun fetchDailyPictureInfo(): Flowable<List<PictureInfo>> {
-        return bingService.fetchHPImage(FORMAT, 0, 3, 1, "hp", 1, 3840, 2160)
+        return bingService.fetchHPImage(FORMAT, 0, 8, 1, "hp", 1, 3840, 2160)
             .map { it.data }
     }
 }
