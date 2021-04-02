@@ -1,4 +1,4 @@
-package com.yechy.dailypic.ui
+package com.yechy.dailypic.ui.gallery
 
 import android.os.Bundle
 import android.view.LayoutInflater

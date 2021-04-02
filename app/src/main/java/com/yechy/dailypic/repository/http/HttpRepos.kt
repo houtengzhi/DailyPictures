@@ -15,4 +15,9 @@ class HttpRepos(val bingService: BingService) {
         return bingService.fetchHPImage(FORMAT, 0, 8, 1, "hp", 1, 3840, 2160)
             .map { it.data }
     }
+
+    fun fetchTodayPictureInfo(): Flowable<PictureInfo> {
+        return bingService.fetchHPImage(FORMAT, 0, 1, 1, "hp", 1, 3840, 2160)
+            .map { it.data.get(0) }
+    }
 }

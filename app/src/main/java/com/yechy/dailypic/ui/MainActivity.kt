@@ -3,6 +3,8 @@ package com.yechy.dailypic.ui
 import android.os.Bundle
 import com.yechy.dailypic.R
 import com.yechy.dailypic.base.BaseActivity
+import com.yechy.dailypic.ui.gallery.GalleryFragment
+import com.yechy.dailypic.ui.home.MainFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -19,6 +21,12 @@ class MainActivity: BaseActivity() {
     }
 
     private fun initFragment() {
+        supportFragmentManager.apply {
+            findFragmentByTag(TAG) ?: beginTransaction().add(R.id.fl_container, MainFragment(), TAG).commitAllowingStateLoss()
+        }
+    }
+
+    private fun showGallery() {
         supportFragmentManager.apply {
             findFragmentByTag(TAG) ?: beginTransaction().add(R.id.fl_container, GalleryFragment(), TAG).commitAllowingStateLoss()
         }

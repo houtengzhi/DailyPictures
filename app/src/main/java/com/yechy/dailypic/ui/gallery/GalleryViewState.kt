@@ -1,4 +1,4 @@
-package com.yechy.dailypic.ui
+package com.yechy.dailypic.ui.gallery
 
 import com.yechy.dailypic.repository.PictureInfo
 import java.util.*

@@ -1,4 +1,4 @@
-package com.yechy.dailypic.ui
+package com.yechy.dailypic.ui.gallery
 
 import androidx.hilt.lifecycle.ViewModelInject
 import com.uber.autodispose.autoDispose
@@ -16,7 +16,8 @@ import io.reactivex.subjects.BehaviorSubject
  */
 class GalleryViewModel @ViewModelInject constructor(val dataRepos: DataRepos): BaseViewModel() {
     private val mViewStateSubject: BehaviorSubject<GalleryViewState> = BehaviorSubject.createDefault(
-        GalleryViewState.initial())
+        GalleryViewState.initial()
+    )
 
     fun observeViewState(): Observable<GalleryViewState> {
         return mViewStateSubject.hide().distinctUntilChanged()

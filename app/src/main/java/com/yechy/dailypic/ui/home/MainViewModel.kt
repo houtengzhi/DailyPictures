@@ -1,13 +1,51 @@
 package com.yechy.dailypic.ui.home
 
 import androidx.hilt.lifecycle.ViewModelInject
+import com.uber.autodispose.autoDispose
+import com.yechy.dailypic.ext.copyMap
 import com.yechy.dailypic.repository.DataRepos
+import com.yechy.dailypic.repository.SourceInfo
+import com.yechy.dailypic.ui.DataState
 import com.yechy.dailypic.vm.BaseViewModel
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 
 /**
  *
  * Created by cloud on 2021/3/22.
  */
-class MainViewModel @ViewModelInject constructor(dataRepos: DataRepos):BaseViewModel() {
+class MainViewModel @ViewModelInject constructor(val dataRepos: DataRepos):BaseViewModel() {
+
+    private val mDataStateSubject: BehaviorSubject<DataState<List<SourceInfo>>> = BehaviorSubject.createDefault(
+        DataState.inital()
+    )
+
+    fun observeDataState(): Observable<DataState<List<SourceInfo>>> {
+        return mDataStateSubject.hide().distinctUntilChanged()
+    }
+
+    fun getPictureSourceList() {
+        mDataStateSubject.copyMap {
+            it.copy(isLoading = true, data = null, throwable = null)
+        }
+        dataRepos.getPictureSourceList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDispose(this)
+            .subscribe(
+                { pictureSourceList ->
+                    mDataStateSubject.copyMap {
+                        it.copy(isLoading = false, data = pictureSourceList, throwable = null)
+                    }
+                },
+                { throwable ->
+                    mDataStateSubject.copyMap {
+                        it.copy(isLoading = false, data = null, throwable = throwable)
+                    }
+                }
+            )
+    }
 
 }

@@ -14,4 +14,11 @@ class DataRepos(private val dbRepos: DbRepos, private val httpRepos: HttpRepos) 
     fun getTodayPicture(): Flowable<List<PictureInfo>> {
         return httpRepos.fetchDailyPictureInfo()
     }
+
+    fun getPictureSourceList(): Flowable<List<SourceInfo>> {
+        return httpRepos.fetchTodayPictureInfo()
+            .map {
+                arrayListOf(SourceInfo(it.url, "Bing"), SourceInfo(it.url, "APOD"))
+            }
+    }
 }
