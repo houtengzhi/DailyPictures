@@ -39,9 +39,16 @@ object DataParser {
                     val realUrl = BING_BASE_URL + url
 
                     val pictureInfo = PictureInfo(
-                        realUrl, title, desc, copyRight, copyRightOnly,
-                        date, startDate, endDate, 0, 0, hash
+                        realUrl, title
                     )
+                    pictureInfo.desc = desc
+                    pictureInfo.copyRight = copyRight
+                    pictureInfo.copyrightonly = copyRightOnly
+                    pictureInfo.date = date
+                    pictureInfo.startDate = startDate
+                    pictureInfo.endDate = endDate
+                    pictureInfo.hash = hash;
+
                     pictureInfoList.add(pictureInfo)
 
                 }
@@ -52,5 +59,35 @@ object DataParser {
             return pictureInfoList
         }
         return null
+    }
+
+    fun parseApodData(response: String): List<PictureInfo> {
+        val pictureInfoList = ArrayList<PictureInfo>()
+        if (!TextUtils.isEmpty(response)) {
+            try {
+                val jsonArray = JSONArray(response)
+                jsonArray.let { 0.until(it.length()).map { i -> it.optJSONObject(i) } }
+                    .map {
+                        val date = it.optString("date")
+                        val explanation = it.optString("explanation")
+                        val hdUrl = it.optString("hdurl")
+                        val mediaType = it.optString("media_type")
+                        val serviceVersion = it.optString("service_type")
+                        val title = it.optString("title")
+                        val url = it.optString("url")
+                        val pictureInfo = PictureInfo(url, title)
+                        pictureInfo.date = date
+                        pictureInfo.desc = explanation
+                        pictureInfo.mediaType = mediaType
+                        pictureInfo.hdUrl = hdUrl;
+                        pictureInfo.serviceVersion = serviceVersion
+                        pictureInfoList.add(pictureInfo)
+
+                    }
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
+        return pictureInfoList
     }
 }

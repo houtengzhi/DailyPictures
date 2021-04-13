@@ -3,6 +3,7 @@ package com.yechy.dailypic.repository.http
 import com.yechy.dailypic.repository.PictureInfo
 import io.reactivex.Flowable
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.Query
 
 /**
@@ -11,6 +12,7 @@ import retrofit2.http.Query
  */
 interface BingService {
 
+    @Headers("Domain-Name: bing")
     @GET("HPImageArchive.aspx")
     fun fetchHPImage(@Query("format") format: String,
                      @Query("idx") idx: Int,

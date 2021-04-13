@@ -74,6 +74,7 @@ dependencies {
     implementation rootProject.ext.dependencies['logging-interceptor']
     implementation rootProject.ext.dependencies['glide']
     kapt rootProject.ext.dependencies['glide-compiler']
+    implementation 'me.jessyan:retrofit-url-manager:1.4.0'
 
     //debug
     debugImplementation rootProject.ext.dependencies['pandora']

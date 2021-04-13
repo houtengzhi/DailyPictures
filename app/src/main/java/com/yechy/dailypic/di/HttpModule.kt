@@ -1,13 +1,20 @@
 package com.yechy.dailypic.di
 
+import com.yechy.dailypic.repository.http.ApodService
 import com.yechy.dailypic.repository.http.BingService
 import com.yechy.dailypic.repository.http.HttpRepos
+import com.yechy.dailypic.support.ApodConverter
+import com.yechy.dailypic.support.ApodConverterFactory
 import com.yechy.dailypic.support.BingConverterFactory
+import com.yechy.dailypic.util.APOD
+import com.yechy.dailypic.util.APOD_BASE_URL
+import com.yechy.dailypic.util.BING
 import com.yechy.dailypic.util.BING_BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,25 +36,36 @@ object HttpModule {
         val httpLoggingInteractor = HttpLoggingInterceptor()
         httpLoggingInteractor.level = HttpLoggingInterceptor.Level.BODY
         httpBuilder.addInterceptor(httpLoggingInteractor)
-        return httpBuilder.build()
+        RetrofitUrlManager.getInstance().putDomain(BING, BING_BASE_URL)
+        RetrofitUrlManager.getInstance().putDomain(APOD, APOD_BASE_URL)
+
+        return RetrofitUrlManager.getInstance().with(httpBuilder).build()
     }
 
     @Provides
     @Singleton
-    fun createRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+    fun createRetrofit(okHttpClient: OkHttpClient): Retrofit.Builder = Retrofit.Builder()
         .baseUrl(BING_BASE_URL)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .client(okHttpClient)
-        .addConverterFactory(BingConverterFactory.create())
-        .build()
 
     @Provides
     @Singleton
-    fun createBingService(retrofit: Retrofit): BingService =
-        retrofit.create(BingService::class.java)
+    fun createBingService(builder: Retrofit.Builder): BingService {
+        val retrofit = builder.addConverterFactory(BingConverterFactory.create()).build()
+        return retrofit.create(BingService::class.java)
+    }
 
     @Provides
     @Singleton
-    fun createHttpRepos(bingService: BingService): HttpRepos = HttpRepos(bingService)
+    fun createApodService(builder: Retrofit.Builder): ApodService {
+        val retrofit = builder.addConverterFactory(ApodConverterFactory.create()).build()
+        return retrofit.create(ApodService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun createHttpRepos(bingService: BingService, apodService: ApodService): HttpRepos =
+        HttpRepos(bingService, apodService)
 
 }

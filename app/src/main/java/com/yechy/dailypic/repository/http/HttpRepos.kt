@@ -9,7 +9,7 @@ import io.reactivex.Flowable
  */
 const val FORMAT = "js"
 
-class HttpRepos(val bingService: BingService) {
+class HttpRepos(val bingService: BingService, val apodService: ApodService) {
 
     fun fetchDailyPictureInfo(): Flowable<List<PictureInfo>> {
         return bingService.fetchHPImage(FORMAT, 0, 8, 1, "hp", 1, 3840, 2160)
