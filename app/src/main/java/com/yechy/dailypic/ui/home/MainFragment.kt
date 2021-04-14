@@ -49,7 +49,7 @@ class MainFragment: BaseFragment() {
                 parent: RecyclerView,
                 state: RecyclerView.State
             ) {
-                super.getItemOffsets(outRect, view, parent, state)
+                outRect.set(0, 0, 0, 20)
             }
         })
     }

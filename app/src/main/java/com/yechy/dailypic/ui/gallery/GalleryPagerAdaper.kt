@@ -25,7 +25,7 @@ class GalleryPagerAdaper(
     }
 
     override fun getCount(): Int {
-        return pictureInfoList?.size ?: 0
+        return pictureInfoList.size ?: 0
     }
 
     override fun isViewFromObject(
@@ -40,10 +40,10 @@ class GalleryPagerAdaper(
             LayoutInflater.from(mContext).inflate(R.layout.layout_gallery_item, container, false)
         val photoView: PhotoView = view.findViewById(R.id.pv_gallery_item_image)
         val textView = view.findViewById<TextView>(R.id.tv_gallery_item_copyright)
-        if (pictureInfoList != null && pictureInfoList.size > position) {
-            val (url, _, _, copyRight) = pictureInfoList[position]
-            ImageLoader.load(mContext, photoView, url)
-            textView.text = copyRight
+        if (pictureInfoList.size > position) {
+            val info = pictureInfoList[position]
+            ImageLoader.load(mContext, photoView, info.url)
+            textView.text = info.copyRight
         }
         container.addView(
             view,
