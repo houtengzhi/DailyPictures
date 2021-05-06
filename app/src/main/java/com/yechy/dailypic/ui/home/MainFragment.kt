@@ -16,7 +16,6 @@ import com.yechy.dailypic.base.BaseFragment
 import com.yechy.dailypic.repository.SourceInfo
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
  *

@@ -11,13 +11,13 @@ const val FORMAT = "js"
 
 class HttpRepos(val bingService: BingService, val apodService: ApodService) {
 
-    fun fetchDailyPictureInfo(): Flowable<List<PictureInfo>> {
+    suspend fun fetchDailyPictureInfo(): List<PictureInfo> {
         return bingService.fetchHPImage(FORMAT, 0, 8, 1, "hp", 1, 3840, 2160)
-            .map { it.data }
+            .data
     }
 
-    fun fetchTodayPictureInfo(): Flowable<PictureInfo> {
+    suspend fun fetchTodayPictureInfo(): PictureInfo {
         return bingService.fetchHPImage(FORMAT, 0, 1, 1, "hp", 1, 3840, 2160)
-            .map { it.data.get(0) }
+            .data.get(0)
     }
 }

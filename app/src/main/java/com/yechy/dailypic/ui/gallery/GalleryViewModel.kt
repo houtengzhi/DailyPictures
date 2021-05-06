@@ -1,6 +1,7 @@
 package com.yechy.dailypic.ui.gallery
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.viewModelScope
 import com.uber.autodispose.autoDispose
 import com.yechy.dailypic.ext.copyMap
 import com.yechy.dailypic.repository.DataRepos
@@ -9,6 +10,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.launch
 
 /**
  *
@@ -27,29 +29,28 @@ class GalleryViewModel @ViewModelInject constructor(val dataRepos: DataRepos): B
         mViewStateSubject.copyMap {
             it.copy(isLoading = true, pictureList = null, throwable = null)
         }
-        dataRepos.getTodayPicture()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDispose(this)
-            .subscribe (
-                { pictureInfoList ->
-                    mViewStateSubject.copyMap {
-                        it.copy(
-                            isLoading = false,
-                            pictureList = pictureInfoList,
-                            throwable = null
-                        )
-                    }
-                }, {t: Throwable? ->
-                    mViewStateSubject.copyMap {
-                        it.copy(
-                            isLoading = false,
-                            pictureList = null,
-                            throwable = t
-                        )
-                    }
+        viewModelScope.launch {
+            try {
+                val  pictureList = dataRepos.getTodayPicture()
+                mViewStateSubject.copyMap {
+                    it.copy(
+                        isLoading = false,
+                        pictureList = pictureList,
+                        throwable = null
+                    )
                 }
-                )
+            } catch (e: Exception) {
+                mViewStateSubject.copyMap {
+                    it.copy(
+                        isLoading = false,
+                        pictureList = null,
+                        throwable = e
+                    )
+                }
+            }
+
+
+        }
     }
 
 }

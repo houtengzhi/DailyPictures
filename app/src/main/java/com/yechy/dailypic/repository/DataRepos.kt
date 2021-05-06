@@ -11,14 +11,13 @@ import io.reactivex.Flowable
  */
 class DataRepos(private val dbRepos: DbRepos, private val httpRepos: HttpRepos) {
 
-    fun getTodayPicture(): Flowable<List<PictureInfo>> {
+    suspend fun getTodayPicture(): List<PictureInfo> {
         return httpRepos.fetchDailyPictureInfo()
     }
 
-    fun getPictureSourceList(): Flowable<List<SourceInfo>> {
-        return httpRepos.fetchTodayPictureInfo()
-            .map {
-                arrayListOf(SourceInfo(it.url, "Bing"), SourceInfo(it.url, "APOD"))
-            }
+    suspend fun getPictureSourceList(): List<SourceInfo> {
+        val bingPictureInfo = httpRepos.fetchTodayPictureInfo()
+        return arrayListOf(SourceInfo(bingPictureInfo.url, "Bing"), SourceInfo(bingPictureInfo.url, "APOD"))
+
     }
 }

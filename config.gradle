@@ -32,9 +32,9 @@ ext {
             'lifecycle-reactivestreams':'androidx.lifecycle:lifecycle-reactivestreams:2.0.0',
 
             //net
-            'retrofit'            :     'com.squareup.retrofit2:retrofit:2.5.0',
-            'adapter-rxjava'      :     'com.squareup.retrofit2:adapter-rxjava2:2.5.0',
-            'converter-gson'      :     'com.squareup.retrofit2:converter-gson:2.5.0',
+            'retrofit'            :     'com.squareup.retrofit2:retrofit:2.6.0',
+            'adapter-rxjava'      :     'com.squareup.retrofit2:adapter-rxjava2:2.6.0',
+            'converter-gson'      :     'com.squareup.retrofit2:converter-gson:2.6.0',
             'okhttp'              :     'com.squareup.okhttp3:okhttp:3.9.0',
             'logging-interceptor' :     'com.squareup.okhttp3:logging-interceptor:3.9.0',
             'nanohttpd'           :     'org.nanohttpd:nanohttpd:2.3.1',

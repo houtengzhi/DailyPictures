@@ -11,6 +11,15 @@
     android:paddingEnd="2dp"
     android:paddingBottom="2dp">
 
+    <Button
+        android:id="@+id/btn_snack_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Snackbar"
+        android:layout_margin="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/layout_item_team_member_call"
         android:layout_width="0dp"

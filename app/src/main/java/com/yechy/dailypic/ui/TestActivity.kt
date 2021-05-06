@@ -1,31 +1,20 @@
 package com.yechy.dailypic.ui
 
+import android.Manifest.permission.*
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
+import com.google.android.material.snackbar.Snackbar
 import com.yechy.dailypic.R
 import com.yechy.dailypic.base.BaseActivity
-
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-
-import android.Manifest.permission.CALL_PHONE
-
-import android.Manifest.permission.CAMERA
-
-import android.Manifest.permission.GET_ACCOUNTS
-
-import android.Manifest.permission.READ_CALENDAR
-
-import android.Manifest.permission.READ_CONTACTS
-
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-
-import android.Manifest.permission.READ_PHONE_STATE
-
-import android.Manifest.permission.RECORD_AUDIO
-
-import android.Manifest.permission.WRITE_CALENDAR
-
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import com.yechy.dailypic.databinding.ActivityTestBinding
 import com.yechy.dailypic.util.L
 
 
@@ -46,20 +35,33 @@ class TestActivity: BaseActivity() {
 
     }
 
+    private lateinit var binding: ActivityTestBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test)
+        binding = ActivityTestBinding.inflate(layoutInflater)
+
+        binding.btnSnackBar.setOnClickListener {
+
+            val intent = Intent(this, TransparentActivity::class.java)
+            startActivity(intent)
+
+        }
     }
 
     override fun onStart() {
         super.onStart()
 
-        val pems = arrayOf(ACCESS_FINE_LOCATION, CALL_PHONE, CAMERA, GET_ACCOUNTS,
+        val pems = arrayOf(
+            ACCESS_FINE_LOCATION, CALL_PHONE, CAMERA, GET_ACCOUNTS,
             READ_CALENDAR, READ_CONTACTS, READ_EXTERNAL_STORAGE, READ_PHONE_STATE, RECORD_AUDIO,
-            WRITE_CALENDAR, WRITE_EXTERNAL_STORAGE)
+            WRITE_CALENDAR, WRITE_EXTERNAL_STORAGE
+        )
 
-        val groups = arrayOf(LOCATION_GROUP, PHONE_GROUP, CALENDAR_GROUP, CONTACTS_GROUP, CAMERA_GROUP,
-        STORAGE_GROUP, MICROPHONE_GROUP)
+        val groups = arrayOf(
+            LOCATION_GROUP, PHONE_GROUP, CALENDAR_GROUP, CONTACTS_GROUP, CAMERA_GROUP,
+            STORAGE_GROUP, MICROPHONE_GROUP
+        )
 
         var message: String = ""
 //        pems.forEach {
@@ -111,5 +113,20 @@ class TestActivity: BaseActivity() {
             e.printStackTrace()
         }
         return null
+    }
+
+    private fun showSnackbar(view: View, duration: Int) {
+        val s = SpannableString("Snackbar")
+        s.setSpan(ForegroundColorSpan(Color.WHITE), 0, s.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        val snackbar = Snackbar.make(view, s, duration)
+        val layout: Snackbar.SnackbarLayout = snackbar.getView() as Snackbar.SnackbarLayout
+        layout.getChildAt(0).setVisibility(View.GONE)
+        layout.setBackground(null)
+        val content: View =
+            LayoutInflater.from(view.context).inflate(R.layout.layout_snackbar_with_progress, null)
+        (content.findViewById<View>(R.id.text) as TextView).setText(s)
+        layout.setPadding(0, 0, 0, 0)
+        layout.addView(content, 0)
+        snackbar.show()
     }
 }
