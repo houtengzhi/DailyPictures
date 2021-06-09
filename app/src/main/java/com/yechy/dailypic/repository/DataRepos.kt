@@ -3,6 +3,8 @@ package com.yechy.dailypic.repository
 import com.yechy.dailypic.repository.db.DbRepos
 import com.yechy.dailypic.repository.http.HttpRepos
 import io.reactivex.Flowable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 
 
 /**
@@ -11,13 +13,16 @@ import io.reactivex.Flowable
  */
 class DataRepos(private val dbRepos: DbRepos, private val httpRepos: HttpRepos) {
 
-    suspend fun getTodayPicture(): List<PictureInfo> {
-        return httpRepos.fetchDailyPictureInfo()
+    fun getTodayPicture(): Flow<List<PictureInfo>> = flow {
+        emit(httpRepos.fetchDailyPictureInfo())
     }
+        .flowOn(Dispatchers.IO)
 
-    suspend fun getPictureSourceList(): List<SourceInfo> {
+    fun getPictureSourceList(): Flow<List<SourceInfo>> = flow<PictureInfo> {
         val bingPictureInfo = httpRepos.fetchTodayPictureInfo()
-        return arrayListOf(SourceInfo(bingPictureInfo.url, "Bing"), SourceInfo(bingPictureInfo.url, "APOD"))
-
+        emit(bingPictureInfo)
+    }.map {
+        arrayListOf(SourceInfo(it.url, "Bing"), SourceInfo(it.url, "APOD"))
     }
+        .flowOn(Dispatchers.IO)
 }
