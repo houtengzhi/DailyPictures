@@ -1,13 +1,14 @@
 package com.yechy.dailypic.ui
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,47 +26,68 @@ import com.yechy.dailypic.repository.SourceInfo
 import com.yechy.dailypic.ui.home.MainViewModel
 import com.yechy.dailypic.ui.theme.DPTypography
 import com.yechy.dailypic.util.GlideApp
+import com.yechy.dailypic.util.SOURCE_TYPE_BING
 
 @Composable
-fun MainPage(mainViewModel: MainViewModel) {
+fun MainPage(mainViewModel: MainViewModel, navigateToGallery: (Int) -> Unit) {
 
     val scaffoldState = rememberScaffoldState()
     
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
+            val expanded = remember { mutableStateOf(false) }
             TopAppBar(
                 title = { Text(text = stringResource(R.string.app_name))},
                 navigationIcon = {
-                    Icon(painter = painterResource(R.drawable.ic_action_dp), contentDescription = "")
+                    IconButton(onClick = {}) {
+                        Icon(Icons.Filled.Menu, contentDescription = "")
+                    }
+                },
+                actions = {
+                    Box() {
+                        IconButton(onClick = { expanded.value = true}) {
+                            Icon(Icons.Filled.MoreVert, contentDescription = null)
+                        }
+                        DropdownMenu(expanded = expanded.value,
+                            onDismissRequest = { expanded.value = false }) {
+                            DropdownMenuItem(onClick = { expanded.value = false }) {
+                                Text(text = "Settings")
+                            }
+                        }
+                    }
+
                 }
             )
         }
     ) {
-        PictureSourceList(mainViewModel = mainViewModel)
+        PictureSourceList(mainViewModel = mainViewModel, navigateToGallery)
     }
 }
 
 @Composable
-fun PictureSourceList(mainViewModel: MainViewModel) {
+fun PictureSourceList(mainViewModel: MainViewModel, navigateToGallery: (Int) -> Unit) {
     val dataState: DataState<List<SourceInfo>>? by mainViewModel.sourceList.observeAsState()
-    val pictureSourceList = dataState?.data
+    var pictureSourceList = dataState?.data
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp),
+            .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        pictureSourceList?.forEach {
-            PictureSourceRow(sourceInfo = it)
+        if (pictureSourceList == null) {
+            pictureSourceList = emptyList()
+        }
+        items(pictureSourceList!!) { source ->
+            PictureSourceRow(sourceInfo = source, navigateToGallery)
         }
     }
 
 }
 
 @Composable
-fun PictureSourceRow(sourceInfo: SourceInfo) {
-    Card(modifier = Modifier.clickable {  }) {
+fun PictureSourceRow(sourceInfo: SourceInfo, navigateToGallery: (Int) -> Unit) {
+    Card(modifier = Modifier.clickable(onClick = {navigateToGallery(sourceInfo.id)})) {
         Image(
             painter = rememberGlidePainter(
                 request = sourceInfo.url,
@@ -82,8 +104,9 @@ fun PictureSourceRow(sourceInfo: SourceInfo) {
 @Composable
 fun PreviewPictureSourceRow() {
     val sourceInfo = SourceInfo("https://cdn.yamap.co.jp/public/image2.yamap.co.jp/production/de575e56da514826896dfebc6a7d408b?h=1080&t=resize&w=1439",
-        "Bing")
-    PictureSourceRow(sourceInfo)
+        "Bing", SOURCE_TYPE_BING
+    )
+    PictureSourceRow(sourceInfo, {})
 }
 
 @Preview

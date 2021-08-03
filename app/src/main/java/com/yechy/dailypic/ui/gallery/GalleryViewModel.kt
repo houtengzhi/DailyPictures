@@ -9,6 +9,7 @@ import com.yechy.dailypic.repository.DataRepos
 import com.yechy.dailypic.repository.PictureInfo
 import com.yechy.dailypic.ui.DataState
 import com.yechy.dailypic.vm.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -17,18 +18,24 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  *
  * Created by cloud on 2019-12-03.
  */
-class GalleryViewModel @ViewModelInject constructor(val dataRepos: DataRepos): BaseViewModel() {
+@HiltViewModel
+class GalleryViewModel @Inject constructor(val dataRepos: DataRepos): BaseViewModel() {
 
     private val _pictureList = MutableLiveData<DataState<List<PictureInfo>>>(DataState.inital())
 
     val pictureList get() = _pictureList
 
     init {
+
+    }
+
+    fun getPicturesList(id: Int) {
         viewModelScope.launch {
             dataRepos.getTodayPicture()
                 .onStart { _pictureList.copyMap { it.copy(true, null, null) } }

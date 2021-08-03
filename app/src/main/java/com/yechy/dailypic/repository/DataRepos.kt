@@ -2,6 +2,8 @@ package com.yechy.dailypic.repository
 
 import com.yechy.dailypic.repository.db.DbRepos
 import com.yechy.dailypic.repository.http.HttpRepos
+import com.yechy.dailypic.util.SOURCE_TYPE_APOD
+import com.yechy.dailypic.util.SOURCE_TYPE_BING
 import io.reactivex.Flowable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -22,7 +24,9 @@ class DataRepos(private val dbRepos: DbRepos, private val httpRepos: HttpRepos) 
         val bingPictureInfo = httpRepos.fetchTodayPictureInfo()
         emit(bingPictureInfo)
     }.map {
-        arrayListOf(SourceInfo(it.url, "Bing"), SourceInfo(it.url, "APOD"))
+        arrayListOf(SourceInfo(it.url, "Bing", SOURCE_TYPE_BING), SourceInfo(it.url, "APOD", SOURCE_TYPE_APOD),
+            SourceInfo(it.url, "TEST1", SOURCE_TYPE_BING), SourceInfo(it.url, "TEST2", SOURCE_TYPE_BING),
+            SourceInfo(it.url, "TEST3", SOURCE_TYPE_BING))
     }
         .flowOn(Dispatchers.IO)
 }

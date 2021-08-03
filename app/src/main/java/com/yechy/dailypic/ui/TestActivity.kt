@@ -84,7 +84,7 @@ class TestActivity: BaseActivity() {
             val pm: PackageManager = packageManager
             try {
                 val info = pm.getPermissionInfo(permission, 0)
-                val gInfo = pm.getPermissionGroupInfo(info.group, 0)
+                val gInfo = info.group?.let { pm.getPermissionGroupInfo(it, 0) }
                 name = info.loadLabel(pm).toString()
             } catch (e: PackageManager.NameNotFoundException) {
                 e.printStackTrace()
