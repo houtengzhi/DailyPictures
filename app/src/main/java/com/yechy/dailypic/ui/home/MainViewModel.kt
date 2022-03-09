@@ -1,6 +1,5 @@
 package com.yechy.dailypic.ui.home
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.uber.autodispose.autoDispose
 import com.yechy.dailypic.ext.copyMap

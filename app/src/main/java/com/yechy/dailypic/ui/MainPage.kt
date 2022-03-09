@@ -17,9 +17,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.bumptech.glide.Glide
-import com.google.accompanist.glide.GlidePainterDefaults
-import com.google.accompanist.glide.rememberGlidePainter
 import com.yechy.dailypic.R
 import com.yechy.dailypic.base.DailyPicApp
 import com.yechy.dailypic.repository.SourceInfo
@@ -88,12 +87,11 @@ fun PictureSourceList(mainViewModel: MainViewModel, navigateToGallery: (Int) -> 
 @Composable
 fun PictureSourceRow(sourceInfo: SourceInfo, navigateToGallery: (Int) -> Unit) {
     Card(modifier = Modifier.clickable(onClick = {navigateToGallery(sourceInfo.id)})) {
-        Image(
-            painter = rememberGlidePainter(
-                request = sourceInfo.url,
-                previewPlaceholder = R.drawable.placeholder),
+        Image(painter = rememberAsyncImagePainter(
+                model = sourceInfo.url,
+                placeholder = painterResource(R.drawable.placeholder)),
             contentDescription = "bing"
-            )
+        )
         Text(modifier = Modifier.padding(start = 10.dp, top = 10.dp)
             , text = sourceInfo.title,
             style = DPTypography.h4)

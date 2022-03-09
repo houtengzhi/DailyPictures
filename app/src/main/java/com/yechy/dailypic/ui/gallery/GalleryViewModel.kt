@@ -1,6 +1,5 @@
 package com.yechy.dailypic.ui.gallery
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.uber.autodispose.autoDispose

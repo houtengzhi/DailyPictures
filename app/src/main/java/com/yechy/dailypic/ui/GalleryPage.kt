@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.IntOffset
-import com.google.accompanist.glide.rememberGlidePainter
+import coil.compose.rememberAsyncImagePainter
 import com.yechy.dailypic.repository.PictureInfo
 import com.yechy.dailypic.ui.gallery.GalleryViewModel
 import kotlin.math.roundToInt
@@ -69,24 +69,25 @@ fun PictureView(pictureInfo: PictureInfo) {
     var rotation by remember { mutableStateOf(0f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        val defaultScale = maxWidth
         Image(
-            painter = rememberGlidePainter(request = pictureInfo.url),
+            painter = rememberAsyncImagePainter(model = pictureInfo.url),
             modifier = Modifier
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
                 )
-                .offset{
+                .offset {
                     IntOffset(offset.x.roundToInt(), offset.y.roundToInt())
                 }
                 .pointerInput(Unit) {
-                    detectTransformGestures( panZoomLock = true,
+                    detectTransformGestures(panZoomLock = true,
                         onGesture = { centroid, pan, zoom, gestureRotate ->
-                        rotation += gestureRotate
-                        offset += pan
-                        scale *= zoom
-                    })
+                            rotation += gestureRotate
+                            offset += pan
+                            scale *= zoom
+                        })
 
                     detectTapGestures(
                         onDoubleTap = {
@@ -95,8 +96,8 @@ fun PictureView(pictureInfo: PictureInfo) {
                     )
                 },
             contentDescription = "",
-        contentScale = ContentScale.Fit,
-        alignment = Alignment.Center)
+            contentScale = ContentScale.Fit,
+            alignment = Alignment.Center)
     }
 
 }
