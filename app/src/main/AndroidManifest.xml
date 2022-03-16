@@ -25,11 +25,5 @@
 
         </activity>
 
-        <activity android:name=".ui.TestActivity">
-        </activity>
-
-        <activity android:name=".ui.TransparentActivity"
-            android:theme="@style/AppTheme.NoBackground"/>
-
     </application>
 </manifest>

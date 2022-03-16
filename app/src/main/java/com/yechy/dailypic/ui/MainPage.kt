@@ -18,13 +18,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.bumptech.glide.Glide
 import com.yechy.dailypic.R
 import com.yechy.dailypic.base.DailyPicApp
 import com.yechy.dailypic.repository.SourceInfo
 import com.yechy.dailypic.ui.home.MainViewModel
 import com.yechy.dailypic.ui.theme.DPTypography
-import com.yechy.dailypic.util.GlideApp
 import com.yechy.dailypic.util.SOURCE_TYPE_BING
 
 @Composable

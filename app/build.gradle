@@ -67,7 +67,7 @@ dependencies {
         exclude group: 'androidx.appcompat:appcompat'
         exclude group: 'com.google.android.material:material'
     })
-    implementation rootProject.ext.dependencies['photoview']
+    implementation 'com.google.accompanist:accompanist-pager:0.24.4-alpha'
 
     //rx
     implementation rootProject.ext.dependencies['autodispose-android']
