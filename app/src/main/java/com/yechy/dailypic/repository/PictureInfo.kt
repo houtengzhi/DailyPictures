@@ -1,11 +1,19 @@
 package com.yechy.dailypic.repository
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 /**
  *
  * Created by cloud on 2019-11-05.
  */
-data class PictureInfo constructor (val url: String,
-                     val title: String) {
+@Entity(tableName = "picture_list")
+data class PictureInfo constructor(
+    @ColumnInfo(name = "source_type") val sourceType: Int,
+    val url: String,
+    val title: String
+) {
     var mediaType: String? = null
     var copyRight: String? = null
     var copyrightonly: String? = null
@@ -20,4 +28,6 @@ data class PictureInfo constructor (val url: String,
     var hdUrl: String? = null
     var serviceVersion: String? = null
 
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
 }

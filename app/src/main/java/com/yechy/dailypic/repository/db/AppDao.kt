@@ -1,9 +1,8 @@
 package com.yechy.dailypic.repository.db
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
+import com.yechy.dailypic.repository.PictureInfo
+import com.yechy.dailypic.repository.SourceInfo
 import io.reactivex.Single
 
 /**
@@ -13,12 +12,24 @@ import io.reactivex.Single
 @Dao
 interface AppDao {
 
-    @Insert()
-    fun insertAppEntity(appEntity: AppEntity): Single<Long>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPictureSource(sourceInfo: SourceInfo)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPictureSourceList(sourceList: List<SourceInfo>)
+
+    @Update
+    suspend fun updatePictureSource(sourceInfo: SourceInfo)
+
+    @Query("SELECT * FROM source_list")
+    suspend fun queryPictureSourceList(): List<SourceInfo>
 
     @Delete
-    fun deleteAppEntity(appEntity: AppEntity): Single<Int>
+    suspend fun deletePictureSource(sourceInfo: SourceInfo)
 
-    @Query("SELECT * FROM white_list")
-    fun queryAllAppEntityList(): Single<List<AppEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPictureList(pictureList: List<PictureInfo>)
+
+    @Query("SELECT * FROM picture_list WHERE source_type = :type")
+    suspend fun queryPictureList(type: Int): List<PictureInfo>
 }

@@ -1,6 +1,6 @@
 # DailyPicture
 
-分享美图的Android客户端。
+分享美图的Android客户端，采用Compose重构中ing。
 
 # 架构
 基于`MVVM`的架构方式

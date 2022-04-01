@@ -34,9 +34,9 @@ class GalleryViewModel @Inject constructor(val dataRepos: DataRepos): BaseViewMo
 
     }
 
-    fun getPicturesList(id: Int) {
+    fun getPicturesList(sourceType: Int) {
         viewModelScope.launch {
-            dataRepos.getTodayPicture()
+            dataRepos.getTodayPicture(sourceType)
                 .onStart { _pictureList.copyMap { it.copy(true, null, null) } }
                 .catch { e -> _pictureList.copyMap { it.copy(false, null, e) } }
                 .collect { pictureList -> _pictureList.copyMap { it.copy(false, pictureList, null) } }

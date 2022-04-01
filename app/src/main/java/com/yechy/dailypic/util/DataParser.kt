@@ -39,6 +39,7 @@ object DataParser {
                     val realUrl = BING_BASE_URL + url
 
                     val pictureInfo = PictureInfo(
+                        SOURCE_TYPE_BING,
                         realUrl, title
                     )
                     pictureInfo.desc = desc
@@ -75,7 +76,7 @@ object DataParser {
                         val serviceVersion = it.optString("service_type")
                         val title = it.optString("title")
                         val url = it.optString("url")
-                        val pictureInfo = PictureInfo(url, title)
+                        val pictureInfo = PictureInfo(SOURCE_TYPE_APOD, url, title)
                         pictureInfo.date = date
                         pictureInfo.desc = explanation
                         pictureInfo.mediaType = mediaType

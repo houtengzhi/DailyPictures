@@ -2,8 +2,7 @@ package com.yechy.dailypic.repository
 
 import com.yechy.dailypic.repository.db.DbRepos
 import com.yechy.dailypic.repository.http.HttpRepos
-import com.yechy.dailypic.util.SOURCE_TYPE_APOD
-import com.yechy.dailypic.util.SOURCE_TYPE_BING
+import com.yechy.dailypic.util.*
 import io.reactivex.Flowable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -15,18 +14,34 @@ import kotlinx.coroutines.flow.*
  */
 class DataRepos(private val dbRepos: DbRepos, private val httpRepos: HttpRepos) {
 
-    fun getTodayPicture(): Flow<List<PictureInfo>> = flow {
-        emit(httpRepos.fetchDailyPictureInfo())
+    fun getTodayPicture(sourceType: Int): Flow<List<PictureInfo>> = flow {
+        val pictureList = dbRepos.queryPictureList(sourceType)
+        if (pictureList.isEmpty()) {
+            val data = httpRepos.fetchDailyPictureInfo()
+            dbRepos.insertPictureList(data)
+            emit(data)
+        } else {
+            emit(pictureList)
+        }
     }
         .flowOn(Dispatchers.IO)
 
-    fun getPictureSourceList(): Flow<List<SourceInfo>> = flow<PictureInfo> {
-        val bingPictureInfo = httpRepos.fetchTodayPictureInfo()
-        emit(bingPictureInfo)
-    }.map {
-        arrayListOf(SourceInfo(it.url, "Bing", SOURCE_TYPE_BING), SourceInfo(it.url, "APOD", SOURCE_TYPE_APOD),
-            SourceInfo(it.url, "TEST1", SOURCE_TYPE_BING), SourceInfo(it.url, "TEST2", SOURCE_TYPE_BING),
-            SourceInfo(it.url, "TEST3", SOURCE_TYPE_BING))
+    fun getPictureSourceList(): Flow<List<SourceInfo>> = flow<List<SourceInfo>> {
+        val sourceList = dbRepos.queryPictureSourceList()
+        if (sourceList.isEmpty()) {
+            val bingPictureInfo = httpRepos.fetchTodayPictureInfo()
+            val data = arrayListOf(
+                SourceInfo(bingPictureInfo.url, "Bing", SOURCE_TYPE_BING),
+                SourceInfo(bingPictureInfo.url, "APOD", SOURCE_TYPE_APOD),
+                SourceInfo(bingPictureInfo.url, "TEST1", SOURCE_TYPE_TEST1),
+                SourceInfo(bingPictureInfo.url, "TEST2", SOURCE_TYPE_TEST2),
+                SourceInfo(bingPictureInfo.url, "TEST3", SOURCE_TYPE_TEST3)
+            )
+            dbRepos.insertPictureSourceList(data)
+            emit(data)
+        } else {
+            emit(sourceList)
+        }
     }
         .flowOn(Dispatchers.IO)
 }

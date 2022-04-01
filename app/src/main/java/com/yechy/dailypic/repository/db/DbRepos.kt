@@ -1,5 +1,7 @@
 package com.yechy.dailypic.repository.db
 
+import com.yechy.dailypic.repository.PictureInfo
+import com.yechy.dailypic.repository.SourceInfo
 import io.reactivex.Single
 
 /**
@@ -8,9 +10,18 @@ import io.reactivex.Single
  */
 class DbRepos(private val appDatabase: AppDatabase) {
 
-    fun getWhiteList(): Single<List<AppEntity>> = appDatabase.appDao().queryAllAppEntityList()
+    suspend fun insertPictureSource(sourceInfo: SourceInfo) =
+        appDatabase.appDao().insertPictureSource(sourceInfo)
 
-    fun addAppToWhiteList(appEntity: AppEntity) = appDatabase.appDao().insertAppEntity(appEntity)
+    suspend fun insertPictureSourceList(sourceList: List<SourceInfo>) =
+        appDatabase.appDao().insertPictureSourceList(sourceList)
 
-    fun deleteAppFromWhiteList(appEntity: AppEntity) = appDatabase.appDao().insertAppEntity(appEntity)
+    suspend fun queryPictureSourceList(): List<SourceInfo> =
+        appDatabase.appDao().queryPictureSourceList()
+
+    suspend fun insertPictureList(pictureList: List<PictureInfo>) =
+        appDatabase.appDao().insertPictureList(pictureList)
+
+    suspend fun queryPictureList(sourceType: Int): List<PictureInfo> =
+        appDatabase.appDao().queryPictureList(sourceType)
 }
