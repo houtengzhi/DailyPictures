@@ -1,11 +1,11 @@
 package com.yechy.dailypic.ui.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 
 private val LightThemeColors = lightColorScheme(
     primary = Green700,
@@ -29,8 +29,15 @@ fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     MaterialTheme(
-        colorScheme = if (darkTheme) DarkThemeColors else LightThemeColors,
+        colorScheme = when {
+            dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
+            dynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
+            darkTheme -> DarkThemeColors
+            else -> LightThemeColors
+        },
         shapes = Shapes,
-        content = content)
+        content = content
+    )
 }

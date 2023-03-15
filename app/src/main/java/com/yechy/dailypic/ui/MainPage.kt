@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.rememberAsyncImagePainter
 import com.yechy.dailypic.R
 import com.yechy.dailypic.base.DailyPicApp
@@ -35,70 +38,56 @@ import com.yechy.dailypic.ui.theme.DPTypography
 import com.yechy.dailypic.util.SOURCE_TYPE_BING
 import me.onebone.toolbar.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainPage(mainViewModel: MainViewModel, navigateToGallery: (Int) -> Unit) {
 
-    val scaffoldState = rememberCollapsingToolbarScaffoldState()
-
-    CollapsingToolbarScaffold(
-        state = scaffoldState,
-        modifier = Modifier.fillMaxSize(),
-        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
-        toolbar = {
-            
-            ProvideTextStyle(value = TextStyle(color = Color.White)) {
-                Toolbar(state = scaffoldState)
-            }
-            
-//            val expanded = remember { mutableStateOf(false) }
-//            val textSize = (18 + (30 - 18) * scaffoldState.toolbarState.progress).sp
-//            val elevation = (if (scaffoldState.toolbarState.progress == 0f) 4 else 0).dp
-//            Box(
-//                modifier = Modifier
-//                    .background(MaterialTheme.colors.primary)
-//                    .fillMaxWidth()
-//                    .height(150.dp)
-//                    .pin()
-//            ) {
-//                Text(
-//                    text = stringResource(R.string.app_name),
-//                    fontSize = 30.sp,
-//                    color = Color.White,
-//                    modifier = Modifier
-//                        .align(Alignment.Center)
-//                        .alpha(scaffoldState.toolbarState.progress)
-//                        .offset(y = -(75 * (1 - scaffoldState.toolbarState.progress)).dp)
-//                )
-//            }
-
-//            TopAppBar(
-//                title = { Text(
-//                    text = stringResource(R.string.app_name),
-//                    modifier = Modifier.alpha(1f - scaffoldState.toolbarState.progress))},
-//                navigationIcon = {
-//                    IconButton(onClick = {}) {
-//                        Icon(Icons.Filled.Menu, contentDescription = "")
-//                    }
-//                },
-//                actions = {
-//                    Box() {
-//                        IconButton(onClick = { expanded.value = true}) {
-//                            Icon(Icons.Filled.MoreVert, contentDescription = null)
-//                        }
-//                        DropdownMenu(expanded = expanded.value,
-//                            onDismissRequest = { expanded.value = false }) {
-//                            DropdownMenuItem(onClick = { expanded.value = false }) {
-//                                Text(text = "Settings")
-//                            }
-//                        }
-//                    }
+//    val scaffoldState = rememberCollapsingToolbarScaffoldState()
 //
-//                },
-//                elevation = elevation
-//            )
-        }) {
-        PictureSourceList(mainViewModel = mainViewModel, navigateToGallery)
-    }
+//    CollapsingToolbarScaffold(
+//        state = scaffoldState,
+//        modifier = Modifier.fillMaxSize(),
+//        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+//        toolbar = {
+//
+//            ProvideTextStyle(value = TextStyle(color = Color.White)) {
+//                Toolbar(state = scaffoldState)
+//            }
+//        }) {
+//        PictureSourceList(mainViewModel = mainViewModel, navigateToGallery)
+//    }
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            var moreMenuExpanded by remember { mutableStateOf(false) }
+                 LargeTopAppBar(
+                     title = {
+                         Text(
+                             text = stringResource(R.string.app_name),
+                             maxLines = 1,
+                             overflow = TextOverflow.Ellipsis
+                         )
+                     },
+                     navigationIcon = {
+                         IconButton(onClick = {}) {
+                             Icon(Icons.Filled.Menu, contentDescription = "")
+                         }
+                     },
+                     actions = {
+                         IconButton(onClick = { moreMenuExpanded = true}) {
+                             Icon(Icons.Default.MoreVert , contentDescription = "")
+                         }
+                         MoreMenu(expanded = moreMenuExpanded, onDismissRequest = {
+                             moreMenuExpanded = false
+                         })
+                     },
+                     scrollBehavior = scrollBehavior
+                 )
+
+        }, content = { innerPadding ->
+            PictureSourceList(mainViewModel = mainViewModel, navigateToGallery, innerPadding)
+        })
 
 }
 
@@ -115,7 +104,9 @@ private fun CollapsingToolbarScope.Toolbar(state: CollapsingToolbarScaffoldState
                 translationY = -(state.toolbarState.maxHeight - state.toolbarState.height)
                     .coerceAtMost(d)
                     .toFloat()
-                al = 1f - (state.toolbarState.maxHeight - state.toolbarState.height).coerceAtMost(d).div(d.toFloat())
+                al = 1f - (state.toolbarState.maxHeight - state.toolbarState.height)
+                    .coerceAtMost(d)
+                    .div(d.toFloat())
             }
     ) {
         Text(
@@ -175,7 +166,19 @@ private fun CollapsingToolbarScope.Toolbar(state: CollapsingToolbarScaffoldState
 }
 
 @Composable
-fun PictureSourceList(mainViewModel: MainViewModel, navigateToGallery: (Int) -> Unit) {
+private fun MoreMenu(expanded: Boolean, onDismissRequest: () -> Unit) {
+    DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
+        DropdownMenuItem(text = {
+            Text(text = "Settings")
+        }, onClick = { })
+        DropdownMenuItem(text = {
+            Text(text = "About")
+        }, onClick = { })
+    }
+}
+
+@Composable
+fun PictureSourceList(mainViewModel: MainViewModel, navigateToGallery: (Int) -> Unit, contentPaddingValues: PaddingValues) {
     val dataState: DataState<List<SourceInfo>>? by mainViewModel.sourceList.observeAsState()
     var pictureSourceList = dataState?.data
 
@@ -183,7 +186,8 @@ fun PictureSourceList(mainViewModel: MainViewModel, navigateToGallery: (Int) -> 
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = contentPaddingValues) {
         if (pictureSourceList == null) {
             pictureSourceList = emptyList()
         }

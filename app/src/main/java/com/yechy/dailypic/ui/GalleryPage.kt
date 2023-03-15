@@ -3,12 +3,15 @@ package com.yechy.dailypic.ui
 import android.graphics.Picture
 import android.util.Log
 import androidx.compose.animation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -30,9 +33,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.rememberAsyncImagePainter
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import com.yechy.dailypic.repository.PictureInfo
 import com.yechy.dailypic.ui.gallery.GalleryViewModel
 import kotlin.math.roundToInt
@@ -95,7 +95,7 @@ fun GalleryPage(galleryViewModel: GalleryViewModel, navigateUp: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PictureGallery(galleryViewModel: GalleryViewModel, onImageTap: ((Offset) -> Unit)?) {
     val dataState: DataState<List<PictureInfo>>? by galleryViewModel.pictureList.observeAsState()
@@ -106,15 +106,15 @@ fun PictureGallery(galleryViewModel: GalleryViewModel, onImageTap: ((Offset) -> 
         pictureList = emptyList()
     }
 
-    HorizontalPager(count = pictureList.size,
+    HorizontalPager(pageCount = pictureList.size,
         state = pagerState,
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectTapGestures(onTap = onImageTap)
 
-            }) { page ->
-        PictureView(pictureInfo = pictureList[page])
+            }) {
+        PictureView(pictureInfo = pictureList[it])
     }
 }
 
