@@ -2,19 +2,13 @@ package com.yechy.dailypic.ui.gallery
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.uber.autodispose.autoDispose
 import com.yechy.dailypic.ext.copyMap
 import com.yechy.dailypic.repository.DataRepos
 import com.yechy.dailypic.repository.PictureInfo
 import com.yechy.dailypic.ui.DataState
 import com.yechy.dailypic.vm.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,7 +30,7 @@ class GalleryViewModel @Inject constructor(val dataRepos: DataRepos): BaseViewMo
 
     fun getPicturesList(sourceType: Int) {
         viewModelScope.launch {
-            dataRepos.getTodayPicture(sourceType)
+            dataRepos.getDailyPictureList(sourceType)
                 .onStart { _pictureList.copyMap { it.copy(true, null, null) } }
                 .catch { e -> _pictureList.copyMap { it.copy(false, null, e) } }
                 .collect { pictureList -> _pictureList.copyMap { it.copy(false, pictureList, null) } }

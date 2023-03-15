@@ -3,7 +3,6 @@ package com.yechy.dailypic.repository
 import com.yechy.dailypic.repository.db.DbRepos
 import com.yechy.dailypic.repository.http.HttpRepos
 import com.yechy.dailypic.util.*
-import io.reactivex.Flowable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 
@@ -14,10 +13,10 @@ import kotlinx.coroutines.flow.*
  */
 class DataRepos(private val dbRepos: DbRepos, private val httpRepos: HttpRepos) {
 
-    fun getTodayPicture(sourceType: Int): Flow<List<PictureInfo>> = flow {
+    fun getDailyPictureList(sourceType: Int): Flow<List<PictureInfo>> = flow {
         val pictureList = dbRepos.queryPictureList(sourceType)
         if (pictureList.isEmpty()) {
-            val data = httpRepos.fetchDailyPictureInfo()
+            val data = httpRepos.fetchDailyPictureList()
             dbRepos.insertPictureList(data)
             emit(data)
         } else {

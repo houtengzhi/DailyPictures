@@ -11,7 +11,7 @@ const val FORMAT = "js"
 
 class HttpRepos(val bingService: BingService, val apodService: ApodService) {
 
-    suspend fun fetchDailyPictureInfo(): List<PictureInfo> {
+    suspend fun fetchDailyPictureList(): List<PictureInfo> {
         return bingService.fetchHPImage(FORMAT, 0, 8, 1, "hp", 1, 3840, 2160)
             .data
     }

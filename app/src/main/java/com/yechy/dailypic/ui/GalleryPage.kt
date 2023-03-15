@@ -2,14 +2,18 @@ package com.yechy.dailypic.ui
 
 import android.graphics.Picture
 import android.util.Log
+import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -23,9 +27,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import com.yechy.dailypic.repository.PictureInfo
 import com.yechy.dailypic.ui.gallery.GalleryViewModel
 import kotlin.math.roundToInt
@@ -34,32 +41,81 @@ import kotlin.math.roundToInt
  *
  * Created by cloud on 2021/6/4.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GalleryPage(galleryViewModel: GalleryViewModel, navigateUp: () -> Unit) {
 
-    val scaffoldState = rememberScaffoldState()
+    var isToobarVisibile by remember { mutableStateOf(true) }
+    val expanded = remember { mutableStateOf(false) }
 
-    Scaffold(
-        scaffoldState = scaffoldState) {
-        PictureGallery(galleryViewModel)
+    ConstraintLayout {
+        val(gallery, topbar, bottombar) = createRefs()
+
+        PictureGallery(galleryViewModel) {
+            isToobarVisibile = !isToobarVisibile
+        }
+
+        if (isToobarVisibile) {
+            TopAppBar(
+                title = {
+                    Text(text = "title")
+                },
+                modifier = Modifier.constrainAs(topbar) {
+                                                        top.linkTo(parent.top)
+                },
+                navigationIcon = {
+                    IconButton(onClick = {}) {
+                        Icon(Icons.Filled.Menu, contentDescription = "")
+                    }
+                },
+                actions = {
+                    Box() {
+                        IconButton(onClick = { expanded.value = true }) {
+                            Icon(Icons.Filled.MoreVert, contentDescription = null)
+                        }
+                        DropdownMenu(expanded = expanded.value,
+                            onDismissRequest = { expanded.value = false }) {
+//                            DropdownMenuItem(onClick = { expanded.value = false }) {
+//                                Text(text = "Settings")
+//                            }
+                        }
+                    }
+
+                }
+            )
+
+            Text(text = "description",
+                color = Color.Gray,
+                modifier = Modifier.constrainAs(bottombar) {
+                bottom.linkTo(parent.bottom, 20.dp)
+                    start.linkTo(parent.start, 16.dp)
+            })
+
+        }
     }
-
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun PictureGallery(galleryViewModel: GalleryViewModel) {
+fun PictureGallery(galleryViewModel: GalleryViewModel, onImageTap: ((Offset) -> Unit)?) {
     val dataState: DataState<List<PictureInfo>>? by galleryViewModel.pictureList.observeAsState()
     var pictureList = dataState!!.data
+    val pagerState = rememberPagerState()
 
     if (pictureList == null) {
         pictureList = emptyList()
     }
 
-    HorizontalPager(count = pictureList.size, modifier = Modifier.fillMaxSize()) { page ->
+    HorizontalPager(count = pictureList.size,
+        state = pagerState,
+        modifier = Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = onImageTap)
+
+            }) { page ->
         PictureView(pictureInfo = pictureList[page])
     }
-
 }
 
 @Composable

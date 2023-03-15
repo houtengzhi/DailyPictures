@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -108,7 +109,7 @@ private fun CollapsingToolbarScope.Toolbar(state: CollapsingToolbarScaffoldState
         modifier = Modifier
             .fillMaxSize()
             .height(150.dp)
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colorScheme.primary)
             .graphicsLayer {
                 val d = (150.dp - 56.dp).roundToPx()
                 translationY = -(state.toolbarState.maxHeight - state.toolbarState.height)
@@ -144,7 +145,7 @@ private fun CollapsingToolbarScope.Toolbar(state: CollapsingToolbarScaffoldState
                 .weight(1f),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ProvideTextStyle(value = MaterialTheme.typography.h6) {
+            ProvideTextStyle(value = MaterialTheme.typography.headlineMedium) {
                 Text(
                     text = stringResource(R.string.app_name),
                     modifier = Modifier.alpha(1f - state.toolbarState.progress)
@@ -163,9 +164,9 @@ private fun CollapsingToolbarScope.Toolbar(state: CollapsingToolbarScaffoldState
                 }
                 DropdownMenu(expanded = expanded.value,
                     onDismissRequest = { expanded.value = false }) {
-                    DropdownMenuItem(onClick = { expanded.value = false }) {
-                        Text(text = "Settings")
-                    }
+//                    DropdownMenuItem(onClick = { expanded.value = false }) {
+//                        Text(text = "Settings")
+//                    }
                 }
             }
         }
@@ -203,7 +204,7 @@ fun PictureSourceRow(sourceInfo: SourceInfo, navigateToGallery: (Int) -> Unit) {
         )
         Text(modifier = Modifier.padding(start = 10.dp, top = 10.dp)
             , text = sourceInfo.title,
-            style = DPTypography.h4)
+            style = DPTypography.headlineMedium)
     }
 }
 
