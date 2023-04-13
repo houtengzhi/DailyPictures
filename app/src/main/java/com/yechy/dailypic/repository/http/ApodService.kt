@@ -1,8 +1,10 @@
 package com.yechy.dailypic.repository.http
 
+import com.yechy.dailypic.repository.PictureInfo
 import io.reactivex.Flowable
 import okhttp3.ResponseBody
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -12,14 +14,20 @@ import retrofit2.http.Query
  */
 interface ApodService {
 
+    @Headers("Domain-Name: apod")
     @GET("apod")
-    fun getFeed(@Query("api_key") api_key: String?): Flowable<ResponseBody>?
-
-    @GET("apod")
-    fun getFeedWithDate(
+    suspend fun getFeedWithDate(
         @Query("api_key") api_key: String?,
         @Query("date") date: String?
     ): Flowable<ResponseBody>?
+
+    @Headers("Domain-Name: apod")
+    @GET("apod")
+    suspend fun getFeedInDateRange(
+        @Query("api_key") api_key: String?,
+        @Query("start_date") startDate: String?,
+        @Query("end_date") endDate: String?
+    ): ApiResponse<List<PictureInfo>>
 
     @GET(".")
     fun getFeedThumbnail(): Flowable<ResponseBody>?

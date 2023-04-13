@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,127 +42,45 @@ import me.onebone.toolbar.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainPage(mainViewModel: MainViewModel, navigateToGallery: (Int) -> Unit) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    ModalNavigationDrawer(drawerState = drawerState,
+        drawerContent = {
+                        ModalDrawerSheet {
 
-//    val scaffoldState = rememberCollapsingToolbarScaffoldState()
-//
-//    CollapsingToolbarScaffold(
-//        state = scaffoldState,
-//        modifier = Modifier.fillMaxSize(),
-//        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
-//        toolbar = {
-//
-//            ProvideTextStyle(value = TextStyle(color = Color.White)) {
-//                Toolbar(state = scaffoldState)
-//            }
-//        }) {
-//        PictureSourceList(mainViewModel = mainViewModel, navigateToGallery)
-//    }
+                        }
+    }, content = {
+            val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+            Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                topBar = {
+                    var moreMenuExpanded by remember { mutableStateOf(false) }
+                    LargeTopAppBar(
+                        title = {
+                            Text(
+                                text = stringResource(R.string.app_name),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = {}) {
+                                Icon(Icons.Filled.Menu, contentDescription = "")
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { moreMenuExpanded = true}) {
+                                Icon(Icons.Default.MoreVert , contentDescription = "")
+                            }
+                            MoreMenu(expanded = moreMenuExpanded, onDismissRequest = {
+                                moreMenuExpanded = false
+                            })
+                        },
+                        scrollBehavior = scrollBehavior
+                    )
 
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            var moreMenuExpanded by remember { mutableStateOf(false) }
-                 LargeTopAppBar(
-                     title = {
-                         Text(
-                             text = stringResource(R.string.app_name),
-                             maxLines = 1,
-                             overflow = TextOverflow.Ellipsis
-                         )
-                     },
-                     navigationIcon = {
-                         IconButton(onClick = {}) {
-                             Icon(Icons.Filled.Menu, contentDescription = "")
-                         }
-                     },
-                     actions = {
-                         IconButton(onClick = { moreMenuExpanded = true}) {
-                             Icon(Icons.Default.MoreVert , contentDescription = "")
-                         }
-                         MoreMenu(expanded = moreMenuExpanded, onDismissRequest = {
-                             moreMenuExpanded = false
-                         })
-                     },
-                     scrollBehavior = scrollBehavior
-                 )
-
-        }, content = { innerPadding ->
-            PictureSourceList(mainViewModel = mainViewModel, navigateToGallery, innerPadding)
-        })
-
-}
-
-@Composable
-private fun CollapsingToolbarScope.Toolbar(state: CollapsingToolbarScaffoldState) {
-    var al by remember { mutableStateOf(0f)}
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .height(150.dp)
-            .background(MaterialTheme.colorScheme.primary)
-            .graphicsLayer {
-                val d = (150.dp - 56.dp).roundToPx()
-                translationY = -(state.toolbarState.maxHeight - state.toolbarState.height)
-                    .coerceAtMost(d)
-                    .toFloat()
-                al = 1f - (state.toolbarState.maxHeight - state.toolbarState.height)
-                    .coerceAtMost(d)
-                    .div(d.toFloat())
-            }
-    ) {
-        Text(
-            text = stringResource(R.string.app_name),
-            fontSize = 30.sp,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .alpha(al)
-        )
-    }
-    
-    Row(
-        modifier = Modifier
-            .height(56.dp)
-            .road(Alignment.TopStart, Alignment.TopStart),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        val expanded = remember { mutableStateOf(false) }
-        IconButton(onClick = {}) {
-            Icon(Icons.Filled.Menu, contentDescription = "")
-        }
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Row(
-            Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ProvideTextStyle(value = MaterialTheme.typography.headlineMedium) {
-                Text(
-                    text = stringResource(R.string.app_name),
-                    modifier = Modifier.alpha(1f - state.toolbarState.progress)
-                )
-            }
-        }
-
-        Row(
-            Modifier.fillMaxHeight(),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box() {
-                IconButton(onClick = { expanded.value = true }) {
-                    Icon(Icons.Filled.MoreVert, contentDescription = null)
-                }
-                DropdownMenu(expanded = expanded.value,
-                    onDismissRequest = { expanded.value = false }) {
-//                    DropdownMenuItem(onClick = { expanded.value = false }) {
-//                        Text(text = "Settings")
-//                    }
-                }
-            }
-        }
-    }
+                }, content = { innerPadding ->
+                    PictureSourceList(mainViewModel = mainViewModel, navigateToGallery, innerPadding)
+                })
+    })
 
 }
 
@@ -200,11 +119,15 @@ fun PictureSourceList(mainViewModel: MainViewModel, navigateToGallery: (Int) -> 
 
 @Composable
 fun PictureSourceRow(sourceInfo: SourceInfo, navigateToGallery: (Int) -> Unit) {
-    Card(modifier = Modifier.clickable(onClick = {navigateToGallery(sourceInfo.type)})) {
+    Card(modifier = Modifier.fillMaxWidth()
+        .clickable(onClick = {navigateToGallery(sourceInfo.type)})) {
         Image(painter = rememberAsyncImagePainter(
                 model = sourceInfo.url,
-                placeholder = painterResource(R.drawable.placeholder)),
-            contentDescription = "bing"
+                placeholder = painterResource(R.drawable.placeholder),
+            contentScale = ContentScale.FillWidth),
+            modifier = Modifier.fillMaxWidth(),
+            contentDescription = "bing",
+            contentScale = ContentScale.FillWidth
         )
         Text(modifier = Modifier.padding(start = 10.dp, top = 10.dp)
             , text = sourceInfo.title,

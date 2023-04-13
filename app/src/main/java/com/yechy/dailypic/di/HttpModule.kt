@@ -18,7 +18,6 @@ import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import javax.inject.Singleton
 
 /**
@@ -46,7 +45,6 @@ object HttpModule {
     @Singleton
     fun createRetrofit(okHttpClient: OkHttpClient): Retrofit.Builder = Retrofit.Builder()
         .baseUrl(BING_BASE_URL)
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .client(okHttpClient)
 
     @Provides
