@@ -1,5 +1,6 @@
 package com.yechy.dailypic.repository.http
 
+import com.yechy.dailypic.annotation.RetrofitApi
 import com.yechy.dailypic.repository.PictureInfo
 import io.reactivex.Flowable
 import retrofit2.http.GET
@@ -14,6 +15,7 @@ interface BingService {
 
     @Headers("Domain-Name: bing")
     @GET("HPImageArchive.aspx")
+    @RetrofitApi("get_bing_images")
     suspend fun fetchHPImage(@Query("format") format: String,
                      @Query("idx") idx: Int,
                      @Query("n") n:Int,

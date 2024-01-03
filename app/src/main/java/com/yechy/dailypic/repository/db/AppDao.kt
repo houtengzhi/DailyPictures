@@ -24,6 +24,9 @@ interface AppDao {
     @Query("SELECT * FROM source_list")
     suspend fun queryPictureSourceList(): List<SourceInfo>
 
+    @Query("SELECT * FROM source_list WHERE type = :type")
+    suspend fun queryPictureSourceWithType(type: Int): SourceInfo?
+
     @Delete
     suspend fun deletePictureSource(sourceInfo: SourceInfo)
 

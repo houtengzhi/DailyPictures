@@ -19,6 +19,9 @@ class DbRepos(private val appDatabase: AppDatabase) {
     suspend fun queryPictureSourceList(): List<SourceInfo> =
         appDatabase.appDao().queryPictureSourceList()
 
+    suspend fun queryPictureSourceWithType(type: Int): SourceInfo? =
+        appDatabase.appDao().queryPictureSourceWithType(type)
+
     suspend fun insertPictureList(pictureList: List<PictureInfo>) =
         appDatabase.appDao().insertPictureList(pictureList)
 

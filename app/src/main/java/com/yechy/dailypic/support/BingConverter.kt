@@ -2,6 +2,7 @@ package com.yechy.dailypic.support
 
 import com.yechy.dailypic.repository.PictureInfo
 import com.yechy.dailypic.repository.http.ApiResponse
+import com.yechy.dailypic.util.DPError
 import com.yechy.dailypic.util.DataParser.parseBingData
 import okhttp3.ResponseBody
 import retrofit2.Converter
@@ -14,9 +15,13 @@ import kotlin.jvm.Throws
 class BingConverter :
     Converter<ResponseBody, ApiResponse<List<PictureInfo>?>> {
 
-    override fun convert(value: ResponseBody): ApiResponse<List<PictureInfo>?> {
+    override fun convert(value: ResponseBody): ApiResponse<List<PictureInfo>> {
         val response = value.string()
         val data = parseBingData(response)
-        return ApiResponse(data)
+        if (data.isNotEmpty()) {
+            return ApiResponse.Success(data)
+        } else {
+            return ApiResponse.Error(DPError.NoContent)
+        }
     }
 }

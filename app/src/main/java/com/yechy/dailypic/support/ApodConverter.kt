@@ -10,10 +10,10 @@ import retrofit2.Converter
  *
  * Created by cloud on 2021/4/2.
  */
-class ApodConverter: Converter<ResponseBody, ApiResponse<List<PictureInfo>>> {
+class ApodConverter: Converter<ResponseBody, ApiResponse<List<PictureInfo>?>> {
     override fun convert(value: ResponseBody): ApiResponse<List<PictureInfo>> {
-        val response = value.toString()
+        val response = value.string()
         val data = DataParser.parseApodData(response)
-        return ApiResponse(data)
+        return data
     }
 }

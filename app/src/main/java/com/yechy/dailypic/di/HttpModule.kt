@@ -3,9 +3,8 @@ package com.yechy.dailypic.di
 import com.yechy.dailypic.repository.http.ApodService
 import com.yechy.dailypic.repository.http.BingService
 import com.yechy.dailypic.repository.http.HttpRepos
-import com.yechy.dailypic.support.ApodConverter
-import com.yechy.dailypic.support.ApodConverterFactory
-import com.yechy.dailypic.support.BingConverterFactory
+import com.yechy.dailypic.support.ApiResponseCallAdapterFactory
+import com.yechy.dailypic.support.AnnotationConverterFactory
 import com.yechy.dailypic.util.APOD
 import com.yechy.dailypic.util.APOD_BASE_URL
 import com.yechy.dailypic.util.BING
@@ -46,18 +45,22 @@ object HttpModule {
     fun createRetrofit(okHttpClient: OkHttpClient): Retrofit.Builder = Retrofit.Builder()
         .baseUrl(BING_BASE_URL)
         .client(okHttpClient)
+        .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
+        .addConverterFactory(AnnotationConverterFactory.create())
+
 
     @Provides
     @Singleton
     fun createBingService(builder: Retrofit.Builder): BingService {
-        val retrofit = builder.addConverterFactory(BingConverterFactory.create()).build()
+        val retrofit = builder.build()
         return retrofit.create(BingService::class.java)
     }
 
     @Provides
     @Singleton
     fun createApodService(builder: Retrofit.Builder): ApodService {
-        val retrofit = builder.addConverterFactory(ApodConverterFactory.create()).build()
+        val retrofit = builder
+            .build()
         return retrofit.create(ApodService::class.java)
     }
 

@@ -1,7 +1,16 @@
 package com.yechy.dailypic.repository
 
+import android.util.Log
 import com.yechy.dailypic.repository.db.DbRepos
+import com.yechy.dailypic.repository.http.ApodService
+import com.yechy.dailypic.repository.http.BingService
 import com.yechy.dailypic.repository.http.HttpRepos
+import com.yechy.dailypic.repository.http.onError
+import com.yechy.dailypic.repository.http.onException
+import com.yechy.dailypic.repository.http.onSuccess
+import com.yechy.dailypic.repository.http.suspendOnError
+import com.yechy.dailypic.repository.http.suspendOnException
+import com.yechy.dailypic.repository.http.suspendOnSuccess
 import com.yechy.dailypic.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -13,34 +22,68 @@ import kotlinx.coroutines.flow.*
  */
 class DataRepos(private val dbRepos: DbRepos, private val httpRepos: HttpRepos) {
 
-    fun getDailyPictureList(sourceType: Int): Flow<List<PictureInfo>> = flow {
+    companion object {
+        const val TAG = "DataRepos"
+
+        val SOURCES_TYPE = arrayListOf(SourceType.Bing, SourceType.Apod)
+    }
+
+    fun getDailyPictureList(sourceType: Int): Flow<List<PictureInfo>> = flow<List<PictureInfo>> {
         val pictureList = dbRepos.queryPictureList(sourceType)
         if (pictureList.isEmpty()) {
-            val data = httpRepos.fetchDailyPictureList()
-            dbRepos.insertPictureList(data)
-            emit(data)
+            httpRepos.fetchDailyPictureList(sourceType)
+                .suspendOnSuccess {
+                    dbRepos.insertPictureList(data)
+                    emit(data)
+                }
+                .onError {
+
+                }
+
         } else {
             emit(pictureList)
         }
     }
         .flowOn(Dispatchers.IO)
 
-    fun getPictureSourceList(): Flow<List<SourceInfo>> = flow<List<SourceInfo>> {
-        val sourceList = dbRepos.queryPictureSourceList()
-        if (sourceList.isEmpty()) {
-            val bingPictureInfo = httpRepos.fetchTodayPictureInfo()
-            val data = arrayListOf(
-                SourceInfo(bingPictureInfo.url, "Bing", SOURCE_TYPE_BING),
-                SourceInfo(bingPictureInfo.url, "APOD", SOURCE_TYPE_APOD),
-                SourceInfo(bingPictureInfo.url, "TEST1", SOURCE_TYPE_TEST1),
-                SourceInfo(bingPictureInfo.url, "TEST2", SOURCE_TYPE_TEST2),
-                SourceInfo(bingPictureInfo.url, "TEST3", SOURCE_TYPE_TEST3)
-            )
-            dbRepos.insertPictureSourceList(data)
-            emit(data)
-        } else {
-            emit(sourceList)
+    fun getPictureSourceList(): Flow<List<SourceInfo>> {
+        val flows = mutableListOf<Flow<SourceInfo?>>()
+        SOURCES_TYPE.forEach { sourceType ->
+            val flow = flow {
+                var source = dbRepos.queryPictureSourceWithType(sourceType.value)
+                Log.d(TAG, "read ${sourceType.text} lcoal: ${source}")
+                if (source == null) {
+                    httpRepos.fetchTodayPictureInfo(sourceType.value)
+                        .suspendOnSuccess {
+                            Log.d(TAG, "fetch ${sourceType.text} today picture info onSuccess")
+                            source = SourceInfo(data.url, sourceType.text, sourceType.value)
+                            emit(source)
+                            dbRepos.insertPictureSource(source!!)
+                        }
+                        .suspendOnError {
+                            Log.e(TAG, "fetch ${sourceType.text} today picture info onError, ${this.toString()}")
+                            emit(null)
+                        }
+                        .suspendOnException {
+                            Log.e(TAG, "fetch ${sourceType.text} today picture info onException, ${this.toString()}")
+                            emit(null)
+                        }
+
+                } else {
+                    emit(source)
+                }
+            }
+                .onEach {
+                    Log.d(TAG, "emit ${sourceType.text} source: ${it}")
+                }
+                .flowOn(Dispatchers.IO)
+            flows.add(flow)
+        }
+
+        return combine(*flows.toTypedArray()) {
+            Log.d(TAG, "combine ${it.size}")
+            it.toList().filterNotNull()
         }
     }
-        .flowOn(Dispatchers.IO)
+
 }
