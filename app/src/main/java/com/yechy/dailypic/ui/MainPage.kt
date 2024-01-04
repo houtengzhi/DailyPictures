@@ -36,7 +36,7 @@ import com.yechy.dailypic.base.DailyPicApp
 import com.yechy.dailypic.repository.SourceInfo
 import com.yechy.dailypic.ui.home.MainViewModel
 import com.yechy.dailypic.ui.theme.DPTypography
-import com.yechy.dailypic.util.SOURCE_TYPE_BING
+import com.yechy.dailypic.util.SourceType
 import me.onebone.toolbar.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -139,7 +139,7 @@ fun PictureSourceRow(sourceInfo: SourceInfo, navigateToGallery: (Int) -> Unit) {
 @Composable
 fun PreviewPictureSourceRow() {
     val sourceInfo = SourceInfo("https://cdn.yamap.co.jp/public/image2.yamap.co.jp/production/de575e56da514826896dfebc6a7d408b?h=1080&t=resize&w=1439",
-        "Bing", SOURCE_TYPE_BING
+        "Bing", SourceType.Bing.value
     )
     PictureSourceRow(sourceInfo, {})
 }

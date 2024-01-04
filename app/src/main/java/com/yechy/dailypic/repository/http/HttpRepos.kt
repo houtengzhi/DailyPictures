@@ -26,11 +26,11 @@ class HttpRepos(val bingService: BingService, val apodService: ApodService) {
             calendar.timeInMillis = System.currentTimeMillis()
             val endDate = SimpleDateFormat(ApodService.DATE_FORMAT).format(calendar.timeInMillis)
             val currentDay = calendar.get(Calendar.DAY_OF_YEAR)
-            calendar.set(Calendar.DAY_OF_YEAR, currentDay - 100)
+            calendar.set(Calendar.DAY_OF_YEAR, currentDay - 50)
             val startDate = SimpleDateFormat(ApodService.DATE_FORMAT).format(calendar.timeInMillis)
             return apodService.getFeedInDateRange(ApodService.API_KEY, startDate, endDate)
         }
-        return ApiResponse.Error(-1, "")
+        return ApiResponse.Error(DPError.SourceTypeNotFound)
     }
 
     suspend fun fetchTodayPictureInfo(sourceType: Int): ApiResponse<PictureInfo> {

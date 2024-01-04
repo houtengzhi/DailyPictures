@@ -33,11 +33,15 @@ class DataRepos(private val dbRepos: DbRepos, private val httpRepos: HttpRepos) 
         if (pictureList.isEmpty()) {
             httpRepos.fetchDailyPictureList(sourceType)
                 .suspendOnSuccess {
+                    Log.d(TAG, "fetch picture list onSuccess, size=${data.size}")
                     dbRepos.insertPictureList(data)
                     emit(data)
                 }
                 .onError {
-
+                    Log.e(TAG, "fetch picture list onError, size=${this.toString()}")
+                }
+                .onException {
+                    Log.e(TAG, "fetch picture list onException, size=${this.toString()}")
                 }
 
         } else {

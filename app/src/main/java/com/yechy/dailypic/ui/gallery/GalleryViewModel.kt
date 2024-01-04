@@ -1,5 +1,6 @@
 package com.yechy.dailypic.ui.gallery
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.yechy.dailypic.ext.copyMap
@@ -20,6 +21,10 @@ import javax.inject.Inject
 @HiltViewModel
 class GalleryViewModel @Inject constructor(val dataRepos: DataRepos): BaseViewModel() {
 
+    companion object {
+        const val TAG = "GalleryViewModel"
+    }
+
     private val _pictureList = MutableLiveData<DataState<List<PictureInfo>>>(DataState.inital())
 
     val pictureList get() = _pictureList
@@ -29,6 +34,7 @@ class GalleryViewModel @Inject constructor(val dataRepos: DataRepos): BaseViewMo
     }
 
     fun getPicturesList(sourceType: Int) {
+        Log.d(TAG, "getPicturesList()")
         viewModelScope.launch {
             dataRepos.getDailyPictureList(sourceType)
                 .onStart { _pictureList.copyMap { it.copy(true, null, null) } }

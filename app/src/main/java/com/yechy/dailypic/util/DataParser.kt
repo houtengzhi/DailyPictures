@@ -41,7 +41,7 @@ object DataParser {
                     val realUrl = BING_BASE_URL + url
 
                     val pictureInfo = PictureInfo(
-                        SOURCE_TYPE_BING,
+                        SourceType.Bing.value,
                         realUrl, title
                     )
                     pictureInfo.desc = desc
@@ -77,15 +77,15 @@ object DataParser {
                             val serviceVersion = it.optString("service_type")
                             val title = it.optString("title")
                             val url = it.optString("url")
-                            val pictureInfo = PictureInfo(SOURCE_TYPE_APOD, url, title)
+                            val pictureInfo = PictureInfo(SourceType.Apod.value, url, title)
                             pictureInfo.date = date
                             pictureInfo.desc = explanation
                             pictureInfo.mediaType = mediaType
                             pictureInfo.hdUrl = hdUrl;
                             pictureInfo.serviceVersion = serviceVersion
                             pictureInfoList.add(pictureInfo)
-                            return ApiResponse.Success(pictureInfoList)
                         }
+                    return ApiResponse.Success(pictureInfoList)
                 } else if (tokener is JSONObject) {
                     val code = tokener.optInt("code", 0)
                     if (code == 0) {
@@ -97,7 +97,7 @@ object DataParser {
                         val title = tokener.optString("title")
                         val url = tokener.optString("url")
 
-                        val pictureInfo = PictureInfo(SOURCE_TYPE_APOD, url, title)
+                        val pictureInfo = PictureInfo(SourceType.Apod.value, url, title)
                         pictureInfo.date = date
                         pictureInfo.desc = explanation
                         pictureInfo.mediaType = mediaType
