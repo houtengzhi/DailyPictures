@@ -4,11 +4,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.yechy.dailypic"
-        minSdkVersion rootProject.ext.android.minSdkVersion
-        targetSdkVersion rootProject.ext.android.compileSdkVersion
+        minSdkVersion 21
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -21,12 +21,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     buildFeatures {
@@ -54,16 +54,16 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
     //jetpack
-    api rootProject.ext.dependencies['lifecycle-extensions']
-    api rootProject.ext.dependencies['lifecycle-common-java8']
-    kapt rootProject.ext.dependencies['lifecycle-compiler']
+    api "androidx.lifecycle:lifecycle-extensions:2.0.0"
+    api "androidx.lifecycle:lifecycle-common-java8:2.0.0"
+    kapt "androidx.lifecycle:lifecycle-compiler:2.0.0"
 
     //db
-    api rootProject.ext.dependencies['room-runtime']
-    implementation rootProject.ext.dependencies['room-ktx']
-    kapt rootProject.ext.dependencies['room-compiler']
+    api "androidx.room:room-runtime:2.4.2"
+    implementation "androidx.room:room-ktx:2.4.0"
+    kapt "androidx.room:room-compiler:2.4.2"
 
-    api rootProject.ext.dependencies['lifecycle-viewmodel']
+    api "androidx.lifecycle:lifecycle-viewmodel:2.0.0"
 
     //ui
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -72,19 +72,19 @@ dependencies {
     implementation "me.onebone:toolbar-compose:2.3.5"
 
     //rx
-    implementation rootProject.ext.dependencies['autodispose-android']
-    implementation rootProject.ext.dependencies['autodispose-android-archcomponents']
+    implementation "com.uber.autodispose:autodispose-android:1.4.0"
+    implementation "com.uber.autodispose:autodispose-android-archcomponents:1.4.0"
 
     //net
-    implementation rootProject.ext.dependencies['okhttp']
-    implementation rootProject.ext.dependencies['retrofit']
+    implementation "com.squareup.okhttp3:okhttp:4.9.3"
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation rootProject.ext.dependencies['logging-interceptor']
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
     implementation 'me.jessyan:retrofit-url-manager:1.4.0'
     implementation("io.coil-kt:coil-compose:2.2.2")
 
     //debug
-    debugImplementation rootProject.ext.dependencies['pandora']
+    debugImplementation "com.github.whataa:pandora:androidx_v2.0.4"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -118,7 +118,4 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:2.5.3"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-}
-repositories {
-    mavenCentral()
 }
