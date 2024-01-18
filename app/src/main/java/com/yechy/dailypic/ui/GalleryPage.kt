@@ -100,13 +100,15 @@ fun GalleryPage(galleryViewModel: GalleryViewModel, navigateUp: () -> Unit) {
 fun PictureGallery(galleryViewModel: GalleryViewModel, onImageTap: ((Offset) -> Unit)?) {
     val dataState: DataState<List<PictureInfo>>? by galleryViewModel.pictureList.observeAsState()
     var pictureList = dataState!!.data
-    val pagerState = rememberPagerState()
 
     if (pictureList == null) {
         pictureList = emptyList()
     }
+    val pagerState = rememberPagerState() {
+        pictureList.size
+    }
 
-    HorizontalPager(pageCount = pictureList.size,
+    HorizontalPager(
         state = pagerState,
         modifier = Modifier
             .fillMaxSize()

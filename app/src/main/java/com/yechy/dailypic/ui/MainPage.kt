@@ -54,6 +54,8 @@ fun MainPage(mainViewModel: MainViewModel, navigateToGallery: (Int) -> Unit) {
                 topBar = {
                     var moreMenuExpanded by remember { mutableStateOf(false) }
                     LargeTopAppBar(
+                        colors = TopAppBarDefaults.largeTopAppBarColors(
+                        ),
                         title = {
                             Text(
                                 text = stringResource(R.string.app_name),
@@ -119,8 +121,9 @@ fun PictureSourceList(mainViewModel: MainViewModel, navigateToGallery: (Int) -> 
 
 @Composable
 fun PictureSourceRow(sourceInfo: SourceInfo, navigateToGallery: (Int) -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth()
-        .clickable(onClick = {navigateToGallery(sourceInfo.type)})) {
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .clickable(onClick = { navigateToGallery(sourceInfo.type) })) {
         Image(painter = rememberAsyncImagePainter(
                 model = sourceInfo.url,
                 placeholder = painterResource(R.drawable.placeholder),

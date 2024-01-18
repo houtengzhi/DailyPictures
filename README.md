@@ -2,6 +2,8 @@
 
 分享美图的Android客户端，采用Compose重构中ing。
 
+![example workflow](https://github.com/houtengzhi/DailyPictures/actions/workflows/android.yml/badge.svg)
+
 # 架构
 基于`MVVM`的架构方式
 
