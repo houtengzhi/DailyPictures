@@ -1,17 +1,12 @@
 package com.yechy.dailypic.ui.home
 
 import androidx.lifecycle.*
-import com.uber.autodispose.autoDispose
 import com.yechy.dailypic.ext.copyMap
 import com.yechy.dailypic.repository.DataRepos
 import com.yechy.dailypic.repository.SourceInfo
 import com.yechy.dailypic.ui.DataState
 import com.yechy.dailypic.vm.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect

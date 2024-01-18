@@ -3,7 +3,6 @@ package com.yechy.dailypic.repository.db
 import androidx.room.*
 import com.yechy.dailypic.repository.PictureInfo
 import com.yechy.dailypic.repository.SourceInfo
-import io.reactivex.Single
 
 /**
  *

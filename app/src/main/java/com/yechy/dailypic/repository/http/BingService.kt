@@ -2,7 +2,6 @@ package com.yechy.dailypic.repository.http
 
 import com.yechy.dailypic.annotation.RetrofitApi
 import com.yechy.dailypic.repository.PictureInfo
-import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query

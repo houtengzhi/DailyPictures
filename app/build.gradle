@@ -75,9 +75,6 @@ dependencies {
     implementation 'com.google.accompanist:accompanist-pager:0.29.2-rc'
     implementation "me.onebone:toolbar-compose:2.3.5"
 
-    //rx
-    implementation "com.uber.autodispose:autodispose-android:1.4.0"
-    implementation "com.uber.autodispose:autodispose-android-archcomponents:1.4.0"
 
     //net
     implementation "com.squareup.okhttp3:okhttp:4.9.3"

@@ -3,7 +3,6 @@ package com.yechy.dailypic.repository.http
 import com.yechy.dailypic.annotation.RetrofitApi
 import com.yechy.dailypic.repository.PictureInfo
 import com.yechy.dailypic.repository.bean.ApodBean
-import io.reactivex.Flowable
 import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -34,14 +33,14 @@ interface ApodService {
     ): ApiResponse<List<PictureInfo>>
 
     @GET(".")
-    fun getFeedThumbnail(): Flowable<ResponseBody>?
+    fun getFeedThumbnail(): ApiResponse<ResponseBody>
 
     @POST("translate")
     fun getTranslate(
         @Query("key") key: String?,
         @Query("lang") lang: String?,
         @Query("text") text: String?
-    ): Flowable<ResponseBody>?
+    ): ApiResponse<ResponseBody>
 
     companion object {
         const val API_KEY = "DEMO_KEY"

@@ -5,7 +5,6 @@ import android.icu.util.Calendar
 import com.yechy.dailypic.repository.PictureInfo
 import com.yechy.dailypic.util.DPError
 import com.yechy.dailypic.util.SourceType
-import io.reactivex.Flowable
 import java.util.*
 import kotlin.collections.ArrayList
 
