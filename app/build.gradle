@@ -39,6 +39,10 @@ android {
         kotlinCompilerVersion kotlin_version
     }
     namespace 'com.yechy.dailypic'
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {

@@ -2,7 +2,10 @@
 
 分享美图的Android客户端，采用Compose重构中ing。
 
-![example workflow](https://github.com/houtengzhi/DailyPictures/actions/workflows/android.yml/badge.svg)
+<p align="center">
+  <a href="https://www.apache.org/licenses/LICENSE-2.0"><img alt="License" src="https://img.shields.io/hexpm/l/plug.svg"/></a>
+  <a href="https://github.com/houtengzhi/DailyPictures/actions"><img alt="Build Status" src="https://github.com/houtengzhi/DailyPictures/actions/workflows/android.yml/badge.svg"/></a>
+</p>
 
 # 架构
 基于`MVVM`的架构方式
@@ -18,7 +21,7 @@
 ### 依赖注入
 * Dagger-hilt
 
-# 开源协议 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+# 开源协议
 
 ```
 Copyright 2019 Cloud Ye
